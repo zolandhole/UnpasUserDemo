@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bgunpas"
+    tools:context=".InputMacActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/linear_perhatian"
+                android:padding="10dp"
+                android:background="@drawable/border"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="18dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/perhatian"
+                    android:textStyle="bold"
+                    android:textColor="@color/bodas"/>
+
+                <View
+                    android:layout_marginTop="8dp"
+                    android:background="@color/bodas"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp" />
+
+                <TextView
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/bodas"
+                    android:text="@string/panduan_mac"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_input"
+                android:layout_below="@+id/linear_perhatian"
+                android:padding="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="18dp"
+                android:orientation="vertical">
+
+                <com.phearme.macaddressedittext.MacAddressEditText
+                    android:id="@+id/mac_input"
+                    android:drawableStart="@drawable/ic_bluetooth_black_24dp"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:textColor="@color/bodas"
+                    android:hint="@string/mac"
+                    android:textColorHint="@color/hejotaikuda"
+                    app:backgroundTint="@color/hejotaikuda"
+                    android:drawablePadding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/login_button"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/hideung"
+                    android:text="@string/update"
+                    android:background="@drawable/button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

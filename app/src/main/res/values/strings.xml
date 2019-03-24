@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">UnpasUserDemo</string>
+    <string name="selamat_datang">Selamat Datang</string>
+    <string name="surampak_sakosoy">Surampak Sakosoy</string>
+    <string name="hukum_pidana">Hukum Pidana</string>
+    <string name="forum">Forum</string>
+    <string name="absen">Absen</string>
+    <string name="jadwal">Jadwal</string>
+    <string name="pengumuman">PENGUMUMAN:</string>
+    <string name="content_pengumuman">Menampilkan Informasi informasi dari kampus</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="username">Username</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="keluar">Keluar</string>
+    <string name="mac">MAC ADDRESS BLUETOOTH</string>
+    <string name="perhatian">PERHATIAN !</string>
+    <string name="panduan_mac">Untuk melakukan Absen diperlukan MAC ADDRESS Bluetooth pada perangkat handphone anda.  \nUntuk mengetahui MAC ADDRESS bluetooth anda :  \n1. Nyalakan Bluetooth  \n2. Masuk menu Setting  \n3. Masuk menu Tentang Ponsel  \n4. Cari informasi alamat bluetooth  \n5. Catat Mac Address pada menu alamat bluetooth  \n6. Masukan Mac Address pada form dibawah  \n7. Klik Simpan   \n\nanda tidak dapat melakukan absen jika mac address yang anda masukan tidak sesuai,</string>
+    <string name="update">Update</string>
+</resources>

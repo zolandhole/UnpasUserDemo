@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bgunpas"
+    android:fitsSystemWindows="true"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:contentDescription="@null"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/logounpas"/>
+
+    <LinearLayout
+        android:layout_margin="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/login_username"
+            android:drawableStart="@drawable/ic_account_circle_black_24dp"
+            android:textCursorDrawable="@drawable/cursor"
+            android:textColor="@color/bodas"
+            android:hint="@string/username"
+            android:drawablePadding="10dp"
+            android:inputType="number"
+            android:textColorHint="@color/hejotaikuda"
+            app:backgroundTint="@color/hejotaikuda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/login_password"
+            android:drawableStart="@drawable/ic_lock_black_24dp"
+            android:textCursorDrawable="@drawable/cursor"
+            android:textColor="@color/bodas"
+            android:hint="@string/password"
+            android:drawablePadding="10dp"
+            android:inputType="textPassword"
+            android:textColorHint="@color/hejotaikuda"
+            app:backgroundTint="@color/hejotaikuda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/login_button"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/hideung"
+            android:text="@string/login"
+            android:background="@drawable/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>
