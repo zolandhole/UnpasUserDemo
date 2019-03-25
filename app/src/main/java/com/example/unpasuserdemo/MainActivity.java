@@ -126,8 +126,10 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (mac_user.equals("")){
                     sendUserToInputMacActivity();
+                } else if (mac_user.length() != 17){
+                    sendUserToInputMacActivity();
                 } else {
-                    Toast.makeText(MainActivity.this, mac_user, Toast.LENGTH_SHORT).show();
+                    sendUserToQRActivity();
                 }
             }
         });
@@ -189,5 +191,11 @@ public class MainActivity extends AppCompatActivity{
         intentInputMac.putExtra("NOMOR_INDUK", nomor_induk);
         intentInputMac.putExtra("PASSWORD", password);
         startActivity(intentInputMac);
+    }
+
+    private void sendUserToQRActivity() {
+        Intent intentQR = new Intent(MainActivity.this, QRActivity.class);
+        intentQR.putExtra("NOMOR_INDUK", nomor_induk);
+        startActivity(intentQR);
     }
 }
