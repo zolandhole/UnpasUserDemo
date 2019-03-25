@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -25,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private String username, password;
     private ProgressDialog progressDialog;
     private DBHandler dbHandler;
-    private String TAG = "LoginActivity";
+//    private String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +77,9 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.dismiss();
     }
 
-    public void insertUserToDB(String nama, String nama_jurusan, String mac_user) {
+    public void insertUserToDB(String id_server, String nama, String nama_jurusan, String mac_user) {
         dbHandler.addUser(
-                new ModelUser(1,username,password,nama, nama_jurusan,mac_user)
+                new ModelUser(1,id_server,username,password,nama, nama_jurusan,mac_user)
         );
         dbHandler.close();
         displaySuccess();

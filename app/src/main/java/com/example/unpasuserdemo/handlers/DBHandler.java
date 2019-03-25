@@ -17,6 +17,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String TABLE_USER = "user";
 
     private static final String KEY_ID = "id";
+    private static final String KEY_ID_SERVER = "id_server";
     private static final String KEY_NOMOR_INDUK = "nomor_induk";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_NAMA = "nama";
@@ -32,6 +33,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + KEY_ID + " INTEGER PRIMARY KEY, "
+                + KEY_ID_SERVER + " TEXT, "
                 + KEY_NOMOR_INDUK + " TEXT, "
                 + KEY_PASSWORD + " TEXT, "
                 + KEY_NAMA + " TEXT, "
@@ -50,6 +52,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values =new ContentValues();
         values.put(KEY_ID, user.getId());
+        values.put(KEY_ID_SERVER, user.getId_server());
         values.put(KEY_NOMOR_INDUK, user.getNomor_induk());
         values.put(KEY_PASSWORD, user.getPassword());
         values.put(KEY_NAMA, user.getNama());
@@ -63,11 +66,12 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ArrayList<HashMap<String, String>> userList = new ArrayList<>();
         String query = "SELECT * FROM "+ TABLE_USER;
-        Cursor cursor = db.query(TABLE_USER, new String[]{KEY_ID, KEY_NOMOR_INDUK, KEY_PASSWORD, KEY_NAMA, KEY_NAMA_JURUSAN, KEY_MAC_USER},
+        Cursor cursor = db.query(TABLE_USER, new String[]{KEY_ID, KEY_ID_SERVER, KEY_NOMOR_INDUK, KEY_PASSWORD, KEY_NAMA, KEY_NAMA_JURUSAN, KEY_MAC_USER},
                 KEY_ID+ "=?",new String[]{String.valueOf(userid)},null, null, null, null);
         if (cursor.moveToNext()){
             HashMap<String,String> user = new HashMap<>();
             user.put("id",cursor.getString(cursor.getColumnIndex(KEY_ID)));
+            user.put("id_server",cursor.getString(cursor.getColumnIndex(KEY_ID_SERVER)));
             user.put("nomor_induk",cursor.getString(cursor.getColumnIndex(KEY_NOMOR_INDUK)));
             user.put("password",cursor.getString(cursor.getColumnIndex(KEY_PASSWORD)));
             user.put("nama",cursor.getString(cursor.getColumnIndex(KEY_NAMA)));

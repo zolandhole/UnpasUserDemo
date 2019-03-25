@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity{
     private void getUserFromDB() {
         ArrayList<HashMap<String,String>> userDb = dbHandler.getUser(1);
         for(Map<String, String> map : userDb) {
-            idUser = map.get("id");
+            idUser = map.get("id_server");
             nomor_induk = map.get("nomor_induk");
             nama = map.get("nama");
             nama_jurusan = map.get("nama_jurusan");
@@ -93,14 +93,6 @@ public class MainActivity extends AppCompatActivity{
     private void syncDataServerAndDB() {
         ServerUnpas ambilData = new ServerUnpas(MainActivity.this,"syncData");
         synchronized (MainActivity.this){ambilData.getData(nomor_induk,password);}
-    }
-
-    private void sendUserToLoginActivity() {
-        dbHandler.deleteAll();
-        Intent intentLogin = new Intent(MainActivity.this, LoginActivity.class);
-        intentLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intentLogin);
-        finish();
     }
 
     private void displayLoading() {
@@ -160,18 +152,18 @@ public class MainActivity extends AppCompatActivity{
         dbHandler = new DBHandler(this);
     }
 
-    public void dataUserFromServer(String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer) {
+    public void dataUserFromServer(String id_server, String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer) {
         if (!namaServer.equals(nama) || !nama_jurusanServer.equals(nama_jurusan) || !mac_userServer.equals(mac_user) || !passwordServer.equals(password)){
-            updateUserDB(namaServer,nama_jurusanServer,mac_userServer,passwordServer);
+            updateUserDB(id_server,namaServer,nama_jurusanServer,mac_userServer,passwordServer);
         } else {
             setObjectDisplay();
         }
     }
 
-    private void updateUserDB(String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer) {
+    private void updateUserDB(String id_server, String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer) {
         dbHandler.deleteAll();
         dbHandler.addUser(
-                new ModelUser(1,nomor_induk,passwordServer,namaServer, nama_jurusanServer,mac_userServer)
+                new ModelUser(1,id_server, nomor_induk,passwordServer,namaServer, nama_jurusanServer,mac_userServer)
         );
         dbHandler.close();
         setObjectDisplay();
@@ -183,8 +175,19 @@ public class MainActivity extends AppCompatActivity{
         displaySuccess();
     }
 
+    private void sendUserToLoginActivity() {
+        dbHandler.deleteAll();
+        Intent intentLogin = new Intent(MainActivity.this, LoginActivity.class);
+        intentLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intentLogin);
+        finish();
+    }
+
     private void sendUserToInputMacActivity() {
         Intent intentInputMac = new Intent(MainActivity.this, InputMacActivity.class);
+        intentInputMac.putExtra("ID_USER", idUser);
+        intentInputMac.putExtra("NOMOR_INDUK", nomor_induk);
+        intentInputMac.putExtra("PASSWORD", password);
         startActivity(intentInputMac);
     }
 }

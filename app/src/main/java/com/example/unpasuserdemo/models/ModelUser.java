@@ -2,13 +2,14 @@ package com.example.unpasuserdemo.models;
 
 public class ModelUser {
     private int id;
-    private String nomor_induk, password, nama, nama_jurusan, status, mac_user;
+    private String id_server, nomor_induk, password, nama, nama_jurusan, status, mac_user;
 
     public ModelUser() {
     }
 
-    public ModelUser(int id, String nomor_induk, String password, String nama,String nama_jurusan, String mac_user) {
+    public ModelUser(int id, String id_server, String nomor_induk, String password, String nama,String nama_jurusan, String mac_user) {
         this.id = id;
+        this.id_server = id_server;
         this.nomor_induk = nomor_induk;
         this.password = password;
         this.nama = nama;
@@ -22,6 +23,14 @@ public class ModelUser {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getId_server() {
+        return id_server;
+    }
+
+    public void setId_server(String id_server) {
+        this.id_server = id_server;
     }
 
     public String getNomor_induk() {
