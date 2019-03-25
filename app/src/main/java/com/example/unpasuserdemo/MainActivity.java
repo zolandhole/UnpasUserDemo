@@ -132,7 +132,11 @@ public class MainActivity extends AppCompatActivity{
         cardViewAbsen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Absen Activity", Toast.LENGTH_SHORT).show();
+                if (mac_user.equals("")){
+                    sendUserToInputMacActivity();
+                } else {
+                    Toast.makeText(MainActivity.this, mac_user, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -176,11 +180,6 @@ public class MainActivity extends AppCompatActivity{
     private void setObjectDisplay() {
         textViewNama.setText(nama);
         textViewJurusan.setText(nama_jurusan);
-        if (mac_user.equals("")){
-            sendUserToInputMacActivity();
-        } else {
-            Toast.makeText(this, mac_user, Toast.LENGTH_SHORT).show();
-        }
         displaySuccess();
     }
 
