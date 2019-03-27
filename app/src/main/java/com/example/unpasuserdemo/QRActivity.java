@@ -3,16 +3,13 @@ package com.example.unpasuserdemo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.unpasuserdemo.utils.AESUtils;
@@ -28,7 +25,6 @@ import java.util.Objects;
 
 public class QRActivity extends AppCompatActivity {
 
-    private static final String TAG = "QRActivity";
     private TextView qr_generate;
     private ImageView qr_image;
     private Button qr_selesai_button;
@@ -36,9 +32,6 @@ public class QRActivity extends AppCompatActivity {
     private SimpleDateFormat simpleDateFormat;
     private final static int QrWidth = 500;
     private final static int QrHeight = 500;
-    private ProgressDialog progressDialog;
-    private CountDownTimer countDownTimer;
-    private ProgressBar qr_progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +39,6 @@ public class QRActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qr);
         initView();
         initListener();
-//        displayLoading();
         qr_selesai_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,18 +51,6 @@ public class QRActivity extends AppCompatActivity {
     private void initListener() {
         nomor_induk = Objects.requireNonNull(getIntent().getExtras()).getString("NOMOR_INDUK");
         simpleDateFormat = new SimpleDateFormat("mm:ss");
-        progressDialog = new ProgressDialog(this);
-    }
-
-    private void displayLoading(){
-        progressDialog.setTitle("Mengambil data");
-        progressDialog.setMessage("Mohon menunggu, sedang memuat data");
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-    }
-
-    public void displaySuccess(){
-        progressDialog.dismiss();
     }
 
     private void kirimUserKeMainActiviy() {
@@ -84,7 +64,6 @@ public class QRActivity extends AppCompatActivity {
         qr_generate = findViewById(R.id.qr_generate);
         qr_image = findViewById(R.id.qr_image);
         qr_selesai_button = findViewById(R.id.qr_selesai_button);
-        qr_progressBar = findViewById(R.id.qr_progressBar);
     }
 
     @Override
@@ -134,27 +113,22 @@ public class QRActivity extends AppCompatActivity {
     }
 
     private void countingDown(){
-        countDownTimer = new CountDownTimer(11000,1000) {
+        CountDownTimer countDownTimer = new CountDownTimer(11000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                if (millisUntilFinished/1000 == 0){
+                if (millisUntilFinished / 1000 == 0) {
                     qr_generate.setText(R.string.memperbaharui_qr_core);
                     qr_image.setVisibility(View.GONE);
-                    qr_progressBar.setVisibility(View.GONE);
                     generateQR();
                 } else {
-                    qr_generate.setText(String.valueOf(millisUntilFinished/1000));
+                    qr_generate.setText(String.valueOf(millisUntilFinished / 1000));
                     qr_image.setVisibility(View.VISIBLE);
-                    qr_progressBar.setVisibility(View.GONE);
                 }
             }
-
             @Override
             public void onFinish() {
-
             }
         };
         countDownTimer.start();
     }
-
 }

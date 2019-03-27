@@ -40,12 +40,4 @@
         android:layout_alignParentBottom="true"
         android:text="@string/selesai"
         android:background="@drawable/button"/>
-
-    <ProgressBar
-        android:visibility="gone"
-        android:layout_centerInParent="true"
-        android:id="@+id/qr_progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 </RelativeLayout>
