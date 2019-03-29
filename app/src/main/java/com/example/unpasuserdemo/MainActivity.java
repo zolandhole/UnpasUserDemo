@@ -5,9 +5,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,12 +33,41 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity{
 
-//    private String TAG = "MainActivity";
+    private String TAG = "MainActivity";
     private TextView textViewNama, textViewJurusan;
     private CardView cardViewForum, cardViewAbsen, cardViewJadwal;
     private ProgressDialog progressDialog;
     private DBHandler dbHandler;
     private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password;
+    private BluetoothAdapter bluetoothAdapter;
+    private String matikanBluetooth;
+
+    private final BroadcastReceiver receiverBTEnable = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            assert action != null;
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)){
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+
+                switch (state){
+                    case BluetoothAdapter.STATE_OFF:
+                        Log.e(TAG, "onReceive: STATE OFF");
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        Log.e(TAG, "onReceive: TURNING OFF");
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        Log.e(TAG, "onReceive: STATE ON");
+                        sendUserToQRActivity();
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        Log.e(TAG, "onReceive: TURNING ON");
+                        break;
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +76,10 @@ public class MainActivity extends AppCompatActivity{
         transparentStatusBar();
         toolbarBusinness();
         initView();
+        initListener();
         onClick();
         runningActivity();
+
     }
 
     private void toolbarBusinness() {
@@ -129,7 +166,7 @@ public class MainActivity extends AppCompatActivity{
                 } else if (mac_user.length() != 17){
                     sendUserToInputMacActivity();
                 } else {
-                    sendUserToQRActivity();
+                    requestEnableBT();
                 }
             }
         });
@@ -152,6 +189,10 @@ public class MainActivity extends AppCompatActivity{
 
         progressDialog = new ProgressDialog(this);
         dbHandler = new DBHandler(this);
+    }
+
+    private void initListener() {
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     public void dataUserFromServer(String id_server, String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer) {
@@ -193,8 +234,41 @@ public class MainActivity extends AppCompatActivity{
         startActivity(intentInputMac);
     }
 
+    private void requestEnableBT() {
+        if (bluetoothAdapter == null){
+            Toast.makeText(this, "Perangkat anda tidak mendukung bluetooth", Toast.LENGTH_SHORT).show();
+        }
+
+        if (!bluetoothAdapter.isEnabled()){
+            matikanBluetooth = "ya";
+            Intent intentBTEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivity(intentBTEnable);
+
+            IntentFilter intentFilterBT = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            registerReceiver(receiverBTEnable, intentFilterBT);
+        }
+
+        if (bluetoothAdapter.isEnabled()){
+            matikanBluetooth = "tidak";
+            sendUserToQRActivity();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(receiverBTEnable);
+//            unregisterReceiver(discoverBT);
+        } catch (Exception e){
+            Log.e(TAG, "onDestroy: " + e);
+        }
+    }
+
     private void sendUserToQRActivity() {
         Intent intentQR = new Intent(MainActivity.this, QRActivity.class);
+        Log.e(TAG, "sendUserToQRActivity: "+ matikanBluetooth);
+        intentQR.putExtra("MATIKAN_BT", matikanBluetooth);
         intentQR.putExtra("NOMOR_INDUK", nomor_induk);
         startActivity(intentQR);
     }

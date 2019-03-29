@@ -1,16 +1,23 @@
 package com.example.unpasuserdemo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.unpasuserdemo.utils.AESUtils;
 import com.google.zxing.BarcodeFormat;
@@ -25,6 +32,7 @@ import java.util.Objects;
 
 public class QRActivity extends AppCompatActivity {
 
+    private static final String TAG = "QRActivity";
     private TextView qr_generate;
     private ImageView qr_image;
     private Button qr_selesai_button;
@@ -32,6 +40,8 @@ public class QRActivity extends AppCompatActivity {
     private SimpleDateFormat simpleDateFormat;
     private final static int QrWidth = 500;
     private final static int QrHeight = 500;
+    private BluetoothAdapter bluetoothAdapter;
+    private String matikanBLuetooth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +49,8 @@ public class QRActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qr);
         initView();
         initListener();
+        initRunning();
+        enableBT();
         qr_selesai_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,10 +59,104 @@ public class QRActivity extends AppCompatActivity {
         });
     }
 
+    private void enableBT() {
+        if (bluetoothAdapter == null){
+            Log.e(TAG, "enableBT: Perangkat tidak menudung bluetooth");
+        }
+
+        if (bluetoothAdapter.isEnabled()){
+            Intent intentBTEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivity(intentBTEnable);
+
+            IntentFilter intentFilterBT = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            registerReceiver(receiverBTEnable, intentFilterBT);
+
+            discoverBT();
+        }
+    }
+
+    private void discoverBT() {
+        Log.e(TAG, "discoverBT: You Are Here");
+        if(!bluetoothAdapter.isDiscovering()){
+            Intent intentDiscover = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            intentDiscover.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 240);
+            startActivityForResult(intentDiscover,1);
+            Toast.makeText(getApplicationContext(), "Make Device Discoverable", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private final BroadcastReceiver receiverBTEnable = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            assert action != null;
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)){
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+
+                switch (state){
+                    case BluetoothAdapter.STATE_OFF:
+                        Log.e(TAG, "onReceive: STATE OFF");
+                        kirimUserKeMainActiviy();
+                        Toast.makeText(QRActivity.this, "Untuk kegiatan ini anda perlu menyalakan bluetooth", Toast.LENGTH_SHORT).show();
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        Log.e(TAG, "onReceive: TURNING OFF");
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        Log.e(TAG, "onReceive: STATE ON");
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        Log.e(TAG, "onReceive: TURNING ON");
+                        break;
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (matikanBLuetooth.equals("ya")){
+            turnOffBT();
+        }
+    }
+
+    private void turnOffBT() {
+        if (bluetoothAdapter.isEnabled()){
+            bluetoothAdapter.disable();
+            IntentFilter intentFilterBT = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            registerReceiver(receiverBTEnable, intentFilterBT);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilterBT = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(receiverBTEnable, intentFilterBT);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (matikanBLuetooth.equals("ya")){
+            turnOffBT();
+        }
+        try{
+            unregisterReceiver(receiverBTEnable);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiverBTEnable);
+        } catch (Exception e){
+            Log.e(TAG, "onPause: ");
+        }
+    }
+
     @SuppressLint("SimpleDateFormat")
     private void initListener() {
         nomor_induk = Objects.requireNonNull(getIntent().getExtras()).getString("NOMOR_INDUK");
+        matikanBLuetooth = getIntent().getExtras().getString("MATIKAN_BT");
+        Log.e(TAG, "initListener: "+ matikanBLuetooth);
         simpleDateFormat = new SimpleDateFormat("mm:ss");
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     private void kirimUserKeMainActiviy() {
@@ -64,12 +170,6 @@ public class QRActivity extends AppCompatActivity {
         qr_generate = findViewById(R.id.qr_generate);
         qr_image = findViewById(R.id.qr_image);
         qr_selesai_button = findViewById(R.id.qr_selesai_button);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initRunning();
     }
 
     private void initRunning() {
@@ -117,7 +217,6 @@ public class QRActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (millisUntilFinished / 1000 == 0) {
-                    qr_generate.setText(R.string.memperbaharui_qr_core);
                     qr_image.setVisibility(View.GONE);
                     generateQR();
                 } else {
