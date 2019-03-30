@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -40,6 +42,25 @@ public class MainActivity extends AppCompatActivity{
     private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password;
     private BluetoothAdapter bluetoothAdapter;
     private String matikanBluetooth;
+    private static String uniqueID = null;
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    private String uuid;
+
+    public synchronized static String id(Context context){
+        if (uniqueID == null){
+            SharedPreferences sharedPreferences = context.getSharedPreferences(
+                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+            uniqueID = sharedPreferences.getString(PREF_UNIQUE_ID, null);
+
+            if (uniqueID == null){
+                uniqueID = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(PREF_UNIQUE_ID, uniqueID);
+                editor.apply();
+            }
+        }
+        return uniqueID;
+    }
 
     private final BroadcastReceiver receiverBTEnable = new BroadcastReceiver() {
         @Override
@@ -77,8 +98,9 @@ public class MainActivity extends AppCompatActivity{
         initView();
         initListener();
         onClick();
-        runningActivity();
+        initRunning();
 
+        uuid = id(this);
     }
 
     private void toolbarBusinness() {
@@ -103,7 +125,7 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
-    private void runningActivity() {
+    private void initRunning() {
         displayLoading();
         getUserFromDB();
     }
@@ -194,11 +216,21 @@ public class MainActivity extends AppCompatActivity{
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
-    public void dataUserFromServer(String id_server, String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer) {
+    public void dataUserFromServer(String id_server, String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer, String uuidServer) {
+        if (uuidServer.equals("")){
+            updateCurrentUUID();
+        }
         if (!namaServer.equals(nama) || !nama_jurusanServer.equals(nama_jurusan) || !mac_userServer.equals(mac_user) || !passwordServer.equals(password)){
             updateUserDB(id_server,namaServer,nama_jurusanServer,mac_userServer,passwordServer);
         } else {
             setObjectDisplay();
+        }
+    }
+
+    private void updateCurrentUUID() {
+        ServerUnpas kirimUUID = new ServerUnpas(MainActivity.this, "kirimUUID");
+        synchronized (MainActivity.this){
+            kirimUUID.sendUUID(idUser,nomor_induk,uuid);
         }
     }
 
