@@ -259,7 +259,6 @@ public class MainActivity extends AppCompatActivity{
         super.onDestroy();
         try {
             unregisterReceiver(receiverBTEnable);
-//            unregisterReceiver(discoverBT);
         } catch (Exception e){
             Log.e(TAG, "onDestroy: " + e);
         }

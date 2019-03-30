@@ -20,4 +20,5 @@
     <string name="qr_judul">Scan QRCODE ke layar Scanner Kelas</string>
     <string name="memperbaharui_qr_core">memperbaharui QR Code</string>
     <string name="selesai">Selesai</string>
+    <string name="denied">kembalikan</string>
 </resources>

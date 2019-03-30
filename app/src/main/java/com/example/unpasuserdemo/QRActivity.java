@@ -41,7 +41,7 @@ public class QRActivity extends AppCompatActivity {
     private final static int QrWidth = 500;
     private final static int QrHeight = 500;
     private BluetoothAdapter bluetoothAdapter;
-    private String matikanBLuetooth;
+    private String matikanBLuetooth, textButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class QRActivity extends AppCompatActivity {
 
     private void enableBT() {
         if (bluetoothAdapter == null){
-            Log.e(TAG, "enableBT: Perangkat tidak menudung bluetooth");
+            Log.e(TAG, "enableBT: Perangkat tidak mendukung bluetooth");
         }
 
         if (bluetoothAdapter.isEnabled()){
@@ -76,12 +76,15 @@ public class QRActivity extends AppCompatActivity {
     }
 
     private void discoverBT() {
-        Log.e(TAG, "discoverBT: You Are Here");
         if(!bluetoothAdapter.isDiscovering()){
             Intent intentDiscover = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             intentDiscover.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 240);
-            startActivityForResult(intentDiscover,1);
-            Toast.makeText(getApplicationContext(), "Make Device Discoverable", Toast.LENGTH_SHORT).show();
+            startActivity(intentDiscover);
+
+            IntentFilter intentFilterDis = new IntentFilter(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
+            registerReceiver(receiverBTDiscoverable, intentFilterDis);
+        } else if (bluetoothAdapter.cancelDiscovery()){
+            Log.e(TAG, "discoverBT: DENIED");
         }
     }
 
@@ -113,6 +116,38 @@ public class QRActivity extends AppCompatActivity {
         }
     };
 
+    private final BroadcastReceiver receiverBTDiscoverable = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            assert action != null;
+            if (action.equals(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED)){
+                int mode = intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, BluetoothAdapter.ERROR);
+                switch (mode){
+                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE:
+                        Log.e(TAG, "onReceive: Discoverability Disable, but can receive connection");
+                        qr_selesai_button.setText(R.string.selesai);
+                        qr_image.setVisibility(View.VISIBLE);
+                        initRunning();
+                        break;
+                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE:
+                        Log.e(TAG, "onReceive: Connectale");
+                        break;
+                    case BluetoothAdapter.SCAN_MODE_NONE:
+                        Log.e(TAG, "onReceive: Not Discover");
+                        break;
+                    case BluetoothAdapter.STATE_CONNECTING:
+                        Log.e(TAG, "onReceive: connecting");
+                        break;
+                    case BluetoothAdapter.STATE_CONNECTED:
+                        Log.e(TAG, "onReceive: connected");
+                        break;
+
+                }
+            }
+        }
+    };
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -132,8 +167,6 @@ public class QRActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        IntentFilter intentFilterBT = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(receiverBTEnable, intentFilterBT);
     }
 
     @Override
@@ -145,6 +178,8 @@ public class QRActivity extends AppCompatActivity {
         try{
             unregisterReceiver(receiverBTEnable);
             LocalBroadcastManager.getInstance(this).unregisterReceiver(receiverBTEnable);
+            unregisterReceiver(receiverBTDiscoverable);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiverBTDiscoverable);
         } catch (Exception e){
             Log.e(TAG, "onPause: ");
         }
@@ -173,10 +208,15 @@ public class QRActivity extends AppCompatActivity {
     }
 
     private void initRunning() {
-        generateQR();
+        textButton = qr_selesai_button.getText().toString();
+        Log.e(TAG, "initRunning: "+ textButton);
+        if (textButton.equals("Selesai")){
+            generateQR();
+        }
     }
 
     private void generateQR() {
+
         Calendar dateTimeKalender = Calendar.getInstance();
         Date date = dateTimeKalender.getTime();
         String dateFormat = simpleDateFormat.format(date);
@@ -217,15 +257,17 @@ public class QRActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (millisUntilFinished / 1000 == 0) {
-                    qr_image.setVisibility(View.GONE);
+//                    qr_image.setVisibility(View.GONE);
                     generateQR();
                 } else {
                     qr_generate.setText(String.valueOf(millisUntilFinished / 1000));
-                    qr_image.setVisibility(View.VISIBLE);
                 }
             }
             @Override
             public void onFinish() {
+                if (textButton.equals("")){
+                    kirimUserKeMainActiviy();
+                }
             }
         };
         countDownTimer.start();
