@@ -49,7 +49,7 @@ public class QRActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qr);
         initView();
         initListener();
-        initRunning();
+        checkingDown();
         enableBT();
         qr_selesai_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,17 +130,8 @@ public class QRActivity extends AppCompatActivity {
                         qr_image.setVisibility(View.VISIBLE);
                         initRunning();
                         break;
-                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE:
-                        Log.e(TAG, "onReceive: Connectale");
-                        break;
                     case BluetoothAdapter.SCAN_MODE_NONE:
                         Log.e(TAG, "onReceive: Not Discover");
-                        break;
-                    case BluetoothAdapter.STATE_CONNECTING:
-                        Log.e(TAG, "onReceive: connecting");
-                        break;
-                    case BluetoothAdapter.STATE_CONNECTED:
-                        Log.e(TAG, "onReceive: connected");
                         break;
 
                 }
@@ -154,6 +145,14 @@ public class QRActivity extends AppCompatActivity {
         if (matikanBLuetooth.equals("ya")){
             turnOffBT();
         }
+        try {
+            unregisterReceiver(receiverBTEnable);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiverBTEnable);
+            unregisterReceiver(receiverBTDiscoverable);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiverBTDiscoverable);
+        } catch (Exception e){
+            Log.e(TAG, "onDestroy: " + e);
+        }
     }
 
     private void turnOffBT() {
@@ -162,11 +161,6 @@ public class QRActivity extends AppCompatActivity {
             IntentFilter intentFilterBT = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
             registerReceiver(receiverBTEnable, intentFilterBT);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -210,9 +204,7 @@ public class QRActivity extends AppCompatActivity {
     private void initRunning() {
         textButton = qr_selesai_button.getText().toString();
         Log.e(TAG, "initRunning: "+ textButton);
-        if (textButton.equals("Selesai")){
-            generateQR();
-        }
+        generateQR();
     }
 
     private void generateQR() {
@@ -252,12 +244,28 @@ public class QRActivity extends AppCompatActivity {
         return bitmap;
     }
 
+    private void checkingDown(){
+        CountDownTimer countDownTimer = new CountDownTimer(10000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                if (textButton.equals("")){
+                    kirimUserKeMainActiviy();
+                }
+            }
+        };
+        countDownTimer.start();
+    }
+
     private void countingDown(){
         CountDownTimer countDownTimer = new CountDownTimer(11000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (millisUntilFinished / 1000 == 0) {
-//                    qr_image.setVisibility(View.GONE);
                     generateQR();
                 } else {
                     qr_generate.setText(String.valueOf(millisUntilFinished / 1000));
@@ -265,9 +273,7 @@ public class QRActivity extends AppCompatActivity {
             }
             @Override
             public void onFinish() {
-                if (textButton.equals("")){
-                    kirimUserKeMainActiviy();
-                }
+
             }
         };
         countDownTimer.start();
