@@ -4,13 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -220,11 +224,45 @@ public class MainActivity extends AppCompatActivity{
         if (uuidServer.equals("")){
             updateCurrentUUID();
         }
+
+        if (!uuidServer.equals(uuid)){
+            loginOrExit(uuidServer);
+        } else {
+            Log.e(TAG, "dataUserFromServer: UUID MATCH");
+        }
+
         if (!namaServer.equals(nama) || !nama_jurusanServer.equals(nama_jurusan) || !mac_userServer.equals(mac_user) || !passwordServer.equals(password)){
             updateUserDB(id_server,namaServer,nama_jurusanServer,mac_userServer,passwordServer);
         } else {
             setObjectDisplay();
         }
+    }
+
+    private void loginOrExit(String uuidServer) {
+        //get Data uuid from Server
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.todoDialogLight);
+        builder.setIcon(R.drawable.ic_pan_tool_black_24dp)
+                .setTitle("Perhatian !")
+                .setMessage("Mohon maaf perangkat ini terintegrasi dengan" + nama + "\nHubungi Team IT untuk menggunakan akun anda pada perangkat ini")
+                .setPositiveButton("Login", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        sendUserToLoginActivity();
+                    }
+                })
+                .setNeutralButton("Keluar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.setCanceledOnTouchOutside(false);
+        Button yes = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        yes.setTextColor(Color.rgb(29,145,36));
     }
 
     private void updateCurrentUUID() {
