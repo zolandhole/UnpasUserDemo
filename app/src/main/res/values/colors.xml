@@ -6,6 +6,7 @@
     <color name="bodas">#ffffff</color>
     <color name="hejotaikuda">#BDB733</color>
     <color name="stroke">#EFF0F1</color>
-    <color name="beureum">#b71c1c</color>
+    <color name="merah">#b71c1c</color>
     <color name="hideung">#000000</color>
+    <color name="hejo">#008400</color>
 </resources>

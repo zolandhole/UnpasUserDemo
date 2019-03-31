@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -206,6 +207,50 @@ public class ServerUnpas {
                 Map<String,String> params =new HashMap<>();
                 params.put("nomor_induk", username);
                 params.put("password", password);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+
+    public void getNamaUUID(final String uuidServer) {
+        Log.e(TAG, "getNamaUUID: uuid" + uuidServer);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ServerSide.GET_NAMAUUID,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        MainActivity mainActivity = (MainActivity) context;
+                        String namaUserDiServer = "";
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.optString("error").equals("true")){
+                                String message = jsonObject.getString("message");
+                                Log.e(TAG, "onResponse: error True" + message);
+                            } else if (jsonObject.optString("error").equals("false")){
+                                JSONArray jsonArray = jsonObject.getJSONArray("message");
+                                for (int i=0; i < jsonArray.length(); i++){
+                                    JSONObject dataServer = jsonArray.getJSONObject(i);
+                                    namaUserDiServer = dataServer.getString("nama");
+                                }
+                                mainActivity.resultNamaUUIDfromServer(namaUserDiServer);
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("uuid", uuidServer);
                 return params;
             }
         };

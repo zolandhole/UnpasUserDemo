@@ -10,7 +10,6 @@
     <string name="content_pengumuman">Menampilkan Informasi informasi dari kampus</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="username">Username</string>
-    <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="keluar">Keluar</string>
     <string name="mac">MAC ADDRESS BLUETOOTH</string>
@@ -21,4 +20,9 @@
     <string name="memperbaharui_qr_core">memperbaharui QR Code</string>
     <string name="selesai">Selesai</string>
     <string name="denied">kembalikan</string>
+    <string name="peringatan">Perangkat ini sudah terintegrasi dengan akun </string>
+    <string name="peringatan2">Hubungi Administrator jika merasa ini adalah perangkat anda</string>
+    <string name="nama">Yadi</string>
+    <string name="exit">Keluar</string>
+    <string name="login">login</string>
 </resources>

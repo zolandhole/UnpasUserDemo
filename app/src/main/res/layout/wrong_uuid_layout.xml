@@ -1,6 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</LinearLayout>
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:layout_width="250dp"
+        android:layout_height="240dp"
+        android:padding="5dp"
+        android:background="@color/hejotaikuda"
+        tools:ignore="UselessParent">
+        <ImageView
+            android:id="@+id/ivIklan"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_pan_tool_black_24dp" />
+        <TextView
+            android:id="@+id/peringatan"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/bodas"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/peringatan"/>
+        <TextView
+            android:id="@+id/uuid_nama_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nama"
+            android:textAlignment="center"
+            android:textColor="@color/bodas"
+            android:textStyle="bold"
+            android:layout_below="@+id/peringatan"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_below="@+id/uuid_nama_server"
+            android:id="@+id/peringatan2"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/bodas"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/peringatan2"/>
+
+        <LinearLayout
+            android:layout_marginTop="50dp"
+            android:layout_below="@+id/peringatan2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+            <Button
+                style="@null"
+                android:id="@+id/uuid_button_keluar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/merah"
+                android:text="@string/exit"/>
+            <Button
+                style="@null"
+                android:id="@+id/uuid_button_login"
+                android:textColor="@color/hejo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/login"/>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

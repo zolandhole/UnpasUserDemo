@@ -4,16 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,37 +31,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity{
 
     private String TAG = "MainActivity";
-    private TextView textViewNama, textViewJurusan;
+    private TextView textViewNama;
+    private TextView textViewJurusan;
     private CardView cardViewForum, cardViewAbsen, cardViewJadwal;
     private ProgressDialog progressDialog;
     private DBHandler dbHandler;
     private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password;
     private BluetoothAdapter bluetoothAdapter;
     private String matikanBluetooth;
-    private static String uniqueID = null;
-    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     private String uuid;
-
-    public synchronized static String id(Context context){
-        if (uniqueID == null){
-            SharedPreferences sharedPreferences = context.getSharedPreferences(
-                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
-            uniqueID = sharedPreferences.getString(PREF_UNIQUE_ID, null);
-
-            if (uniqueID == null){
-                uniqueID = UUID.randomUUID().toString();
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(PREF_UNIQUE_ID, uniqueID);
-                editor.apply();
-            }
-        }
-        return uniqueID;
-    }
 
     private final BroadcastReceiver receiverBTEnable = new BroadcastReceiver() {
         @Override
@@ -104,7 +83,16 @@ public class MainActivity extends AppCompatActivity{
         onClick();
         initRunning();
 
-        uuid = id(this);
+        uuid = "35" + //we make this look like a valid IMEI
+                Build.BOARD.length()%10+ Build.BRAND.length()%10 +
+                Build.CPU_ABI.length()%10 + Build.DEVICE.length()%10 +
+                Build.DISPLAY.length()%10 + Build.HOST.length()%10 +
+                Build.ID.length()%10 + Build.MANUFACTURER.length()%10 +
+                Build.MODEL.length()%10 + Build.PRODUCT.length()%10 +
+                Build.TAGS.length()%10 + Build.TYPE.length()%10 +
+                Build.USER.length()%10 ; //13 digits
+
+        Log.e(TAG, "onCreate: ID =  "+ uuid);
     }
 
     private void toolbarBusinness() {
@@ -226,7 +214,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         if (!uuidServer.equals(uuid)){
-            loginOrExit(uuidServer);
+            checkExistingUser();
         } else {
             Log.e(TAG, "dataUserFromServer: UUID MATCH");
         }
@@ -238,31 +226,44 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    private void loginOrExit(String uuidServer) {
-        //get Data uuid from Server
+    private void checkExistingUser() {
+        Log.e(TAG, "checkExistingUser: "+ uuid );
+        ServerUnpas getNameUUID = new ServerUnpas(MainActivity.this,"get_nama_uuid");
+        synchronized (MainActivity.this){
+            getNameUUID.getNamaUUID(uuid);
+        }
+    }
 
+    public void resultNamaUUIDfromServer(String namaUserDiServer){
+        if (!namaUserDiServer.equals("")){
+            showDialogUUID(namaUserDiServer);
+        }
+        Log.e(TAG, "resultNamaUUIDfromServer: "+ namaUserDiServer);
+    }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.todoDialogLight);
-        builder.setIcon(R.drawable.ic_pan_tool_black_24dp)
-                .setTitle("Perhatian !")
-                .setMessage("Mohon maaf perangkat ini terintegrasi dengan" + nama + "\nHubungi Team IT untuk menggunakan akun anda pada perangkat ini")
-                .setPositiveButton("Login", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        sendUserToLoginActivity();
-                    }
-                })
-                .setNeutralButton("Keluar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        alertDialog.setCanceledOnTouchOutside(false);
-        Button yes = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        yes.setTextColor(Color.rgb(29,145,36));
+    private void showDialogUUID(String namaUserDiServer){
+        final Dialog uuidDialog = new Dialog(this);
+        uuidDialog.setContentView(R.layout.wrong_uuid_layout);
+        uuidDialog.setCanceledOnTouchOutside(false);
+        TextView textViewNamaUUID = uuidDialog.findViewById(R.id.uuid_nama_server);
+        textViewNamaUUID.setText(namaUserDiServer);
+        Button buttonKeluar = uuidDialog.findViewById(R.id.uuid_button_keluar);
+        Button buttonLogin = uuidDialog.findViewById(R.id.uuid_button_login);
+        buttonKeluar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uuidDialog.dismiss();
+                finish();
+            }
+        });
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uuidDialog.dismiss();
+                sendUserToLoginActivity();
+            }
+        });
+        uuidDialog.show();
     }
 
     private void updateCurrentUUID() {
