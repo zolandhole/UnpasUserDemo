@@ -21,6 +21,8 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_pan_tool_black_24dp" />
         <TextView
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:id="@+id/peringatan"
             android:layout_marginTop="10dp"
             android:textColor="@color/bodas"
@@ -29,6 +31,8 @@
             android:layout_height="wrap_content"
             android:text="@string/peringatan"/>
         <TextView
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:id="@+id/uuid_nama_server"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,6 +43,8 @@
             android:layout_below="@+id/peringatan"
             android:layout_marginTop="10dp"/>
         <TextView
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_below="@+id/uuid_nama_server"
             android:id="@+id/peringatan2"
             android:layout_marginTop="10dp"
@@ -49,13 +55,14 @@
             android:text="@string/peringatan2"/>
 
         <LinearLayout
-            android:layout_marginTop="50dp"
-            android:layout_below="@+id/peringatan2"
+            android:layout_margin="8dp"
+            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
             <Button
+                android:layout_marginEnd="2dp"
                 style="@null"
                 android:id="@+id/uuid_button_keluar"
                 android:layout_width="0dp"
@@ -64,6 +71,7 @@
                 android:textColor="@color/merah"
                 android:text="@string/exit"/>
             <Button
+                android:layout_marginStart="2dp"
                 style="@null"
                 android:id="@+id/uuid_button_login"
                 android:textColor="@color/hejo"
