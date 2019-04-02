@@ -6,6 +6,7 @@
     <string name="forum">Forum</string>
     <string name="absen">Absen</string>
     <string name="jadwal">Jadwal</string>
+    <string name="lap_absensi">Lap.Absensi</string>
     <string name="pengumuman">PENGUMUMAN:</string>
     <string name="content_pengumuman">Menampilkan Informasi informasi dari kampus</string>
     <string name="title_activity_login">LoginActivity</string>
