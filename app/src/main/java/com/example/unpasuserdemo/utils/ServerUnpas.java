@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -80,16 +79,25 @@ public class ServerUnpas {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        MainActivity mainActivity = (MainActivity) context;
+                        String namaPemilik = "";
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.optString("error").equals("true")){
                                 status = "failed";
                             } else if (jsonObject.optString("error").equals("false")){
                                 status = "success";
+                                JSONArray jsonArray = jsonObject.getJSONArray("message");
+                                for (int i=0; i < jsonArray.length(); i++){
+                                    JSONObject dataServer = jsonArray.getJSONObject(i);
+                                    namaPemilik = dataServer.getString("nama_pemilik");
+                                }
                             }
-                            Log.e(TAG, "onResponse: Status = " + status);
+                            Log.e(TAG, "onResponse: " + namaPemilik);
+                            mainActivity.resultUpdateUUID(status, namaPemilik);
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Log.e(TAG, "onResponse: exception "+ e);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -112,6 +120,7 @@ public class ServerUnpas {
     }
 
     public void getData (final String username, final String password){
+        Log.e(TAG, "getData: ");
         StringRequest stringRequest = new StringRequest(Request.Method.POST, ServerSide.POST_LOGIN,
                 new Response.Listener<String>() {
                     @Override
@@ -215,7 +224,6 @@ public class ServerUnpas {
     }
 
     public void getNamaUUID(final String uuidServer) {
-        Log.e(TAG, "getNamaUUID: uuid" + uuidServer);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, ServerSide.GET_NAMAUUID,
                 new Response.Listener<String>() {
                     @Override
@@ -232,6 +240,7 @@ public class ServerUnpas {
                                 for (int i=0; i < jsonArray.length(); i++){
                                     JSONObject dataServer = jsonArray.getJSONObject(i);
                                     namaUserDiServer = dataServer.getString("nama");
+
                                 }
                                 mainActivity.resultNamaUUIDfromServer(namaUserDiServer);
 

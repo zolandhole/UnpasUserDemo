@@ -25,4 +25,5 @@
     <string name="nama">Yadi</string>
     <string name="exit">Keluar</string>
     <string name="login">login</string>
+    <string name="registered">Akun yang anda masukan sudah terdaftar di perangkat lain</string>
 </resources>

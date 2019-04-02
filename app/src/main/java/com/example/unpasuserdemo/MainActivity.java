@@ -40,10 +40,8 @@ public class MainActivity extends AppCompatActivity{
     private CardView cardViewForum, cardViewAbsen, cardViewJadwal;
     private ProgressDialog progressDialog;
     private DBHandler dbHandler;
-    private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password;
+    private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password, ownerUUID, uuid, serverUUID, matikanBluetooth;
     private BluetoothAdapter bluetoothAdapter;
-    private String matikanBluetooth;
-    private String uuid;
 
     private final BroadcastReceiver receiverBTEnable = new BroadcastReceiver() {
         @Override
@@ -118,11 +116,13 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void initRunning() {
+        Log.e(TAG, "initRunning: ");
         displayLoading();
         getUserFromDB();
     }
 
     private void getUserFromDB() {
+        Log.e(TAG, "getUserFromDB: ");
         ArrayList<HashMap<String,String>> userDb = dbHandler.getUser(1);
         for(Map<String, String> map : userDb) {
             idUser = map.get("id_server");
@@ -141,11 +141,13 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void syncDataServerAndDB() {
+        Log.e(TAG, "syncDataServerAndDB: ");
         ServerUnpas ambilData = new ServerUnpas(MainActivity.this,"syncData");
         synchronized (MainActivity.this){ambilData.getData(nomor_induk,password);}
     }
 
     private void displayLoading() {
+        Log.e(TAG, "displayLoading: ");
         progressDialog.setTitle("Mengambil data");
         progressDialog.setMessage("Mohon menunggu, sedang memuat data");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -209,21 +211,53 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void dataUserFromServer(String id_server, String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer, String uuidServer) {
-        if (uuidServer.equals("")){
-            updateCurrentUUID();
-        }
-
-        if (!uuidServer.equals(uuid)){
-            checkExistingUser();
+        Log.e(TAG, "dataUserFromServer: ");
+        serverUUID = uuidServer;
+        if (!serverUUID.equals("")){
+            // Cek UUID Siapa itu
+            ServerUnpas checkOwnerUUID = new ServerUnpas(MainActivity.this, "get_owner_uuid");
+            synchronized (MainActivity.this){
+                checkOwnerUUID.getNamaUUID(uuidServer);
+            }
         } else {
-            Log.e(TAG, "dataUserFromServer: UUID MATCH");
+            // CEK UUID UNIT KE KE SERVER SIAPA TAU ADA YG PUNYA
+            ServerUnpas checkThisUUIDtoServer = new ServerUnpas(MainActivity.this, "cek_uuid_to_server");
+            synchronized (MainActivity.this){
+                checkThisUUIDtoServer.sendUUID(idUser,nomor_induk,uuid);
+            }
         }
 
         if (!namaServer.equals(nama) || !nama_jurusanServer.equals(nama_jurusan) || !mac_userServer.equals(mac_user) || !passwordServer.equals(password)){
-            updateUserDB(id_server,namaServer,nama_jurusanServer,mac_userServer,passwordServer);
+            dbHandler.deleteAll();
+            dbHandler.addUser(
+                    new ModelUser(1,id_server, nomor_induk,passwordServer,namaServer, nama_jurusanServer,mac_userServer)
+            );
+            dbHandler.close();
+            setObjectDisplay();
+        }
+    }
+
+    //RESULT dari Cek UUID Siapa itu
+    public void resultNamaUUIDfromServer(String namaUserDiServer){
+        Log.e(TAG, "resultNamaUUIDfromServer: ");
+        ownerUUID = namaUserDiServer;
+        if (!serverUUID.equals(uuid)){
+            showDialogUUIDExist();
         } else {
             setObjectDisplay();
         }
+        progressDialog.dismiss();
+    }
+
+    //RESULT dari CEK UUID UNIT KE KE SERVER SIAPA TAU ADA YG PUNYA
+    public void resultUpdateUUID(String status, String namaPemilik) {
+        Log.e(TAG, "resultUpdateUUID: "+ namaPemilik);
+        if (!namaPemilik.equals("")){
+            showDialogUUID(namaPemilik);
+        } else {
+            setObjectDisplay();
+        }
+        progressDialog.dismiss();
     }
 
     private void checkExistingUser() {
@@ -234,19 +268,18 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    public void resultNamaUUIDfromServer(String namaUserDiServer){
-        if (!namaUserDiServer.equals("")){
-            showDialogUUID(namaUserDiServer);
-        }
-        Log.e(TAG, "resultNamaUUIDfromServer: "+ namaUserDiServer);
-    }
-
-    private void showDialogUUID(String namaUserDiServer){
+    private void showDialogUUIDExist(){
         final Dialog uuidDialog = new Dialog(this);
         uuidDialog.setContentView(R.layout.wrong_uuid_layout);
         uuidDialog.setCanceledOnTouchOutside(false);
         TextView textViewNamaUUID = uuidDialog.findViewById(R.id.uuid_nama_server);
-        textViewNamaUUID.setText(namaUserDiServer);
+        textViewNamaUUID.setText(R.string.registered);
+
+        TextView textViewPeringatan = uuidDialog.findViewById(R.id.peringatan);
+        TextView textViewPeringatan2 = uuidDialog.findViewById(R.id.peringatan2);
+        textViewPeringatan.setVisibility(View.GONE);
+        textViewPeringatan2.setVisibility(View.GONE);
+
         Button buttonKeluar = uuidDialog.findViewById(R.id.uuid_button_keluar);
         Button buttonLogin = uuidDialog.findViewById(R.id.uuid_button_login);
         buttonKeluar.setOnClickListener(new View.OnClickListener() {
@@ -266,20 +299,35 @@ public class MainActivity extends AppCompatActivity{
         uuidDialog.show();
     }
 
-    private void updateCurrentUUID() {
-        ServerUnpas kirimUUID = new ServerUnpas(MainActivity.this, "kirimUUID");
-        synchronized (MainActivity.this){
-            kirimUUID.sendUUID(idUser,nomor_induk,uuid);
-        }
-    }
+    private void showDialogUUID(String namaPemilik){
+        final Dialog uuidDialog = new Dialog(this);
+        uuidDialog.setContentView(R.layout.wrong_uuid_layout);
+        uuidDialog.setCanceledOnTouchOutside(false);
+        TextView textViewNamaUUID = uuidDialog.findViewById(R.id.uuid_nama_server);
+        textViewNamaUUID.setText(namaPemilik);
 
-    private void updateUserDB(String id_server, String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer) {
-        dbHandler.deleteAll();
-        dbHandler.addUser(
-                new ModelUser(1,id_server, nomor_induk,passwordServer,namaServer, nama_jurusanServer,mac_userServer)
-        );
-        dbHandler.close();
-        setObjectDisplay();
+        TextView textViewPeringatan = uuidDialog.findViewById(R.id.peringatan);
+        TextView textViewPeringatan2 = uuidDialog.findViewById(R.id.peringatan2);
+        textViewPeringatan.setVisibility(View.VISIBLE);
+        textViewPeringatan2.setVisibility(View.VISIBLE);
+
+        Button buttonKeluar = uuidDialog.findViewById(R.id.uuid_button_keluar);
+        Button buttonLogin = uuidDialog.findViewById(R.id.uuid_button_login);
+        buttonKeluar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uuidDialog.dismiss();
+                finish();
+            }
+        });
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uuidDialog.dismiss();
+                sendUserToLoginActivity();
+            }
+        });
+        uuidDialog.show();
     }
 
     private void setObjectDisplay() {
@@ -289,6 +337,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void sendUserToLoginActivity() {
+        Log.e(TAG, "sendUserToLoginActivity: ");
         dbHandler.deleteAll();
         Intent intentLogin = new Intent(MainActivity.this, LoginActivity.class);
         intentLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
