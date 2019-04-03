@@ -46,8 +46,10 @@ public class InputMacActivity extends AppCompatActivity {
         displayLoading();
         if (TextUtils.isEmpty(mac_input.getText())){
             Toast.makeText(this, "Masukan MAC ADDRESS Bletooth anda", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
         } else if (Objects.requireNonNull(mac_input.getText()).toString().trim().length() != 17){
             Toast.makeText(this, "Periksa kembali Mac Address Bluetooth anda", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
         } else {
             ServerUnpas kirimMac = new ServerUnpas(InputMacActivity.this, "kirimMac");
             synchronized (InputMacActivity.this) {kirimMac.sendMacAddress(id_user,nomor_induk,mac_input.getText().toString().trim());}
