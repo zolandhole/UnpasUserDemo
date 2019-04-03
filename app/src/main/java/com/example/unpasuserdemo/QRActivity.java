@@ -41,7 +41,7 @@ public class QRActivity extends AppCompatActivity {
     private final static int QrWidth = 500;
     private final static int QrHeight = 500;
     private BluetoothAdapter bluetoothAdapter;
-    private String matikanBLuetooth, textButton;
+    private String matikanBLuetooth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,7 +202,7 @@ public class QRActivity extends AppCompatActivity {
     }
 
     private void initRunning() {
-        textButton = qr_selesai_button.getText().toString();
+        String textButton = qr_selesai_button.getText().toString();
         Log.e(TAG, "initRunning: "+ textButton);
         generateQR();
     }
@@ -253,7 +253,7 @@ public class QRActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                if (textButton.equals("")){
+                if (qr_selesai_button.getText().toString().equals("")){
                     kirimUserKeMainActiviy();
                 }
             }
