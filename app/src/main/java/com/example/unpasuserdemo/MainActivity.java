@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,8 @@ public class MainActivity extends AppCompatActivity{
     private String TAG = "MainActivity";
     private TextView textViewNama;
     private TextView textViewJurusan;
-    private CardView cardViewForum, cardViewAbsen, cardViewJadwal;
+    private CardView cardViewForum, cardViewAbsen, cardViewJadwal, cardViewLapAbsen;
+    private LinearLayout linearLayoutMenu;
     private ProgressDialog progressDialog;
     private DBHandler dbHandler;
     private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password, uuid, serverUUID, matikanBluetooth;
@@ -70,11 +72,30 @@ public class MainActivity extends AppCompatActivity{
         }
     };
 
+    private void requestEnableBT() {
+        if (bluetoothAdapter == null){
+            Toast.makeText(this, "Perangkat anda tidak mendukung bluetooth", Toast.LENGTH_SHORT).show();
+        }
+
+        if (!bluetoothAdapter.isEnabled()){
+            matikanBluetooth = "ya";
+            Intent intentBTEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivity(intentBTEnable);
+
+            IntentFilter intentFilterBT = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            registerReceiver(receiverBTEnable, intentFilterBT);
+        }
+
+        if (bluetoothAdapter.isEnabled()){
+            matikanBluetooth = "tidak";
+            sendUserToQRActivity();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        transparentStatusBar();
         toolbarBusinness();
         initView();
         initListener();
@@ -91,11 +112,22 @@ public class MainActivity extends AppCompatActivity{
                 Build.USER.length()%10 ; //13 digits
     }
 
-    private void toolbarBusinness() {
-        Toolbar toolbar = findViewById(R.id.main_page_toolbar);
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("");
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(receiverBTEnable);
+        } catch (Exception e){
+            Log.e(TAG, "onDestroy: " + e);
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,6 +143,71 @@ public class MainActivity extends AppCompatActivity{
             sendUserToLoginActivity();
         }
         return true;
+    }
+
+    private void toolbarBusinness() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+        Toolbar toolbar = findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
+    }
+
+    private void initView() {
+        textViewNama = findViewById(R.id.main_nama);
+        textViewJurusan = findViewById(R.id.main_jurusan);
+
+        cardViewForum = findViewById(R.id.main_cv_forum);
+        cardViewAbsen = findViewById(R.id.main_cv_absen);
+        cardViewJadwal = findViewById(R.id.main_cv_jadwal);
+        cardViewLapAbsen = findViewById(R.id.main_cv_lap_absen);
+
+        linearLayoutMenu = findViewById(R.id.main_linar_menu);
+
+        progressDialog = new ProgressDialog(this);
+        dbHandler = new DBHandler(this);
+    }
+
+    private void initListener() {
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    private void onClick() {
+        cardViewForum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Forum Activity", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        cardViewAbsen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mac_user.equals("")){
+                    sendUserToInputMacActivity();
+                } else if (mac_user.length() != 17){
+                    sendUserToInputMacActivity();
+                } else {
+                    requestEnableBT();
+                }
+            }
+        });
+
+        cardViewJadwal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Jadwal Activity", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        cardViewLapAbsen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Laporan Absensi", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initRunning() {
@@ -153,58 +250,6 @@ public class MainActivity extends AppCompatActivity{
         progressDialog.dismiss();
     }
 
-    private void transparentStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window w = getWindow();
-            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }
-    }
-
-    private void onClick() {
-        cardViewForum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Forum Activity", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        cardViewAbsen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mac_user.equals("")){
-                    sendUserToInputMacActivity();
-                } else if (mac_user.length() != 17){
-                    sendUserToInputMacActivity();
-                } else {
-                    requestEnableBT();
-                }
-            }
-        });
-
-        cardViewJadwal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Jadwal Activity", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void initView() {
-        textViewNama = findViewById(R.id.main_nama);
-        textViewJurusan = findViewById(R.id.main_jurusan);
-
-        cardViewForum = findViewById(R.id.main_cv_forum);
-        cardViewAbsen = findViewById(R.id.main_cv_absen);
-        cardViewJadwal = findViewById(R.id.main_cv_jadwal);
-
-        progressDialog = new ProgressDialog(this);
-        dbHandler = new DBHandler(this);
-    }
-
-    private void initListener() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    }
-
     public void dataUserFromServer(String id_server, String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer, String uuidServer) {
         serverUUID = uuidServer;
         if (!serverUUID.equals("")){
@@ -233,6 +278,7 @@ public class MainActivity extends AppCompatActivity{
 
     //RESULT dari Cek UUID Siapa itu
     public void resultNamaUUIDfromServer(String namaUserDiServer){
+        Log.e(TAG, "resultNamaUUIDfromServer: "+ namaUserDiServer);
         if (!serverUUID.equals(uuid)){
             showDialogUUIDExist();
         } else {
@@ -249,12 +295,6 @@ public class MainActivity extends AppCompatActivity{
             setObjectDisplay();
         }
         progressDialog.dismiss();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 
     private void showDialogUUIDExist(){
@@ -323,6 +363,7 @@ public class MainActivity extends AppCompatActivity{
     private void setObjectDisplay() {
         textViewNama.setText(nama);
         textViewJurusan.setText(nama_jurusan);
+        userType();
         displaySuccess();
     }
 
@@ -342,40 +383,54 @@ public class MainActivity extends AppCompatActivity{
         startActivity(intentInputMac);
     }
 
-    private void requestEnableBT() {
-        if (bluetoothAdapter == null){
-            Toast.makeText(this, "Perangkat anda tidak mendukung bluetooth", Toast.LENGTH_SHORT).show();
-        }
-
-        if (!bluetoothAdapter.isEnabled()){
-            matikanBluetooth = "ya";
-            Intent intentBTEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivity(intentBTEnable);
-
-            IntentFilter intentFilterBT = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            registerReceiver(receiverBTEnable, intentFilterBT);
-        }
-
-        if (bluetoothAdapter.isEnabled()){
-            matikanBluetooth = "tidak";
-            sendUserToQRActivity();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try {
-            unregisterReceiver(receiverBTEnable);
-        } catch (Exception e){
-            Log.e(TAG, "onDestroy: " + e);
-        }
-    }
-
     private void sendUserToQRActivity() {
         Intent intentQR = new Intent(MainActivity.this, QRActivity.class);
         intentQR.putExtra("MATIKAN_BT", matikanBluetooth);
         intentQR.putExtra("NOMOR_INDUK", nomor_induk);
         startActivity(intentQR);
+    }
+
+    private void menuMahasiswa(){
+        linearLayoutMenu.setWeightSum(3);
+        cardViewForum.setVisibility(View.VISIBLE);
+        cardViewAbsen.setVisibility(View.VISIBLE);
+        cardViewJadwal.setVisibility(View.VISIBLE);
+        cardViewLapAbsen.setVisibility(View.GONE);
+    }
+
+    private void menuDosen(){
+        linearLayoutMenu.setWeightSum(3);
+        cardViewForum.setVisibility(View.VISIBLE);
+        cardViewAbsen.setVisibility(View.VISIBLE);
+        cardViewJadwal.setVisibility(View.GONE);
+        cardViewLapAbsen.setVisibility(View.VISIBLE);
+    }
+
+    private void menuDekan(){
+        linearLayoutMenu.setWeightSum(1);
+        cardViewForum.setVisibility(View.GONE);
+        cardViewAbsen.setVisibility(View.GONE);
+        cardViewJadwal.setVisibility(View.GONE);
+        cardViewLapAbsen.setVisibility(View.VISIBLE);
+    }
+
+    private void userType() {
+        Log.e(TAG, "userType: " + nomor_induk);
+        String typeUser = nomor_induk.substring(0,1);
+        Log.e(TAG, "userType: " + typeUser);
+        switch (typeUser) {
+            case "9":
+                Log.e(TAG, "userType: Dosen");
+                menuDosen();
+                break;
+            case "8":
+                Log.e(TAG, "userType: Dekan");
+                menuDekan();
+                break;
+            default:
+                Log.e(TAG, "userType: Mahasiswa");
+                menuMahasiswa();
+                break;
+        }
     }
 }
