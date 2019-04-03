@@ -271,15 +271,17 @@ public class MainActivity extends AppCompatActivity{
         uuidDialog.setCanceledOnTouchOutside(false);
         uuidDialog.setCancelable(false);
         TextView textViewNamaUUID = uuidDialog.findViewById(R.id.uuid_nama_server);
-        textViewNamaUUID.setText(R.string.registered);
+        textViewNamaUUID.setVisibility(View.GONE);
 
         TextView textViewPeringatan = uuidDialog.findViewById(R.id.peringatan);
         TextView textViewPeringatan2 = uuidDialog.findViewById(R.id.peringatan2);
-        textViewPeringatan.setVisibility(View.GONE);
+
+        textViewPeringatan.setText(R.string.registered);
+        textViewPeringatan.setVisibility(View.VISIBLE);
         textViewPeringatan2.setVisibility(View.GONE);
 
-        Button buttonKeluar = uuidDialog.findViewById(R.id.uuid_button_keluar);
-        Button buttonLogin = uuidDialog.findViewById(R.id.uuid_button_login);
+        CardView buttonKeluar = uuidDialog.findViewById(R.id.uuid_button_keluar);
+        CardView buttonLogin = uuidDialog.findViewById(R.id.uuid_button_login);
         buttonKeluar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

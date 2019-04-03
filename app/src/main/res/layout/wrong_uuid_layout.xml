@@ -2,29 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_centerInParent="true"
         android:layout_width="290dp"
         android:layout_height="190dp"
-        android:padding="1dp"
-        android:background="@color/abuabu"
-        tools:ignore="UselessParent">
+        tools:ignore="UselessParent"
+        android:background="@color/hejoleho">
         <ImageView
             android:id="@+id/ivIklan"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/bodas"
-            android:contentDescription="@null"
-            android:scaleType="fitXY" />
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginStart="150dp"
+            android:adjustViewBounds="true"
+            android:layout_marginBottom="35dp"
+            android:src="@drawable/warninglogo"
+            android:alpha="0.4"
+            android:contentDescription="@null"/>
         <TextView
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:id="@+id/peringatan"
             android:layout_marginTop="10dp"
-            android:textColor="@color/hideung"
+            android:textColor="@color/bodas"
+            android:fontFamily="@font/robotolight"
             android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,8 +41,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/nama"
+            android:textAllCaps="true"
+            android:fontFamily="@font/robotobold"
             android:textAlignment="center"
-            android:textColor="@color/hideung"
+            android:textColor="@color/bodas"
             android:textStyle="bold"
             android:layout_below="@+id/peringatan"
             android:layout_marginTop="10dp"/>
@@ -48,37 +54,61 @@
             android:layout_below="@+id/uuid_nama_server"
             android:id="@+id/peringatan2"
             android:layout_marginTop="10dp"
-            android:textColor="@color/hideung"
+            android:textColor="@color/bodas"
             android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/robotolight"
             android:text="@string/peringatan2"/>
 
         <LinearLayout
-            android:layout_margin="8dp"
+            android:gravity="end"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="6dp"
             android:orientation="horizontal"
-            android:weightSum="2">
-            <Button
-                android:layout_marginEnd="2dp"
-                style="@null"
+            android:background="@color/abungora">
+
+            <androidx.cardview.widget.CardView
                 android:id="@+id/uuid_button_keluar"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textColor="@color/merah"
-                android:text="@string/exit"/>
-            <Button
-                android:layout_marginStart="2dp"
-                style="@null"
+                android:layout_marginEnd="10dp"
+                app:cardCornerRadius="7dp"
+                app:cardBackgroundColor="@color/abuabu2"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/keluar"
+                    android:layout_gravity="center"
+                    android:textColor="@color/bodas"/>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:id="@+id/uuid_button_login"
-                android:textColor="@color/hejotaikuda"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/login"/>
+                app:cardCornerRadius="7dp"
+                app:cardBackgroundColor="@color/hejotaikuda"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login"
+                    android:layout_gravity="center"
+                    android:textColor="@color/bodas"/>
+
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
