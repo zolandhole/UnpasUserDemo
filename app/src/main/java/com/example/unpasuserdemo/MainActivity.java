@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity{
 
     //RESULT dari Cek UUID Siapa itu
     public void resultNamaUUIDfromServer(String namaUserDiServer){
-        Log.e(TAG, "resultNamaUUIDfromServer: ");
+        Log.e(TAG, "resultNamaUUIDfromServer: " + namaUserDiServer);
         ownerUUID = namaUserDiServer;
         if (!serverUUID.equals(uuid)){
             showDialogUUIDExist();
