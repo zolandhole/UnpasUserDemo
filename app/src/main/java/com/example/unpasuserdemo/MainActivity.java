@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity{
     private CardView cardViewForum, cardViewAbsen, cardViewJadwal;
     private ProgressDialog progressDialog;
     private DBHandler dbHandler;
-    private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password, ownerUUID, uuid, serverUUID, matikanBluetooth;
+    private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password, uuid, serverUUID, matikanBluetooth;
     private BluetoothAdapter bluetoothAdapter;
 
     private final BroadcastReceiver receiverBTEnable = new BroadcastReceiver() {
@@ -89,8 +89,6 @@ public class MainActivity extends AppCompatActivity{
                 Build.MODEL.length()%10 + Build.PRODUCT.length()%10 +
                 Build.TAGS.length()%10 + Build.TYPE.length()%10 +
                 Build.USER.length()%10 ; //13 digits
-
-        Log.e(TAG, "onCreate: ID =  "+ uuid);
     }
 
     private void toolbarBusinness() {
@@ -116,13 +114,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void initRunning() {
-        Log.e(TAG, "initRunning: ");
         displayLoading();
         getUserFromDB();
     }
 
     private void getUserFromDB() {
-        Log.e(TAG, "getUserFromDB: ");
         ArrayList<HashMap<String,String>> userDb = dbHandler.getUser(1);
         for(Map<String, String> map : userDb) {
             idUser = map.get("id_server");
@@ -141,16 +137,15 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void syncDataServerAndDB() {
-        Log.e(TAG, "syncDataServerAndDB: ");
         ServerUnpas ambilData = new ServerUnpas(MainActivity.this,"syncData");
         synchronized (MainActivity.this){ambilData.getData(nomor_induk,password);}
     }
 
     private void displayLoading() {
-        Log.e(TAG, "displayLoading: ");
         progressDialog.setTitle("Mengambil data");
         progressDialog.setMessage("Mohon menunggu, sedang memuat data");
         progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
         progressDialog.show();
     }
 
@@ -211,7 +206,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void dataUserFromServer(String id_server, String namaServer, String nama_jurusanServer, String mac_userServer, String passwordServer, String uuidServer) {
-        Log.e(TAG, "dataUserFromServer: ");
         serverUUID = uuidServer;
         if (!serverUUID.equals("")){
             // Cek UUID Siapa itu
@@ -239,8 +233,6 @@ public class MainActivity extends AppCompatActivity{
 
     //RESULT dari Cek UUID Siapa itu
     public void resultNamaUUIDfromServer(String namaUserDiServer){
-        Log.e(TAG, "resultNamaUUIDfromServer: " + namaUserDiServer);
-        ownerUUID = namaUserDiServer;
         if (!serverUUID.equals(uuid)){
             showDialogUUIDExist();
         } else {
@@ -250,8 +242,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     //RESULT dari CEK UUID UNIT KE KE SERVER SIAPA TAU ADA YG PUNYA
-    public void resultUpdateUUID(String status, String namaPemilik) {
-        Log.e(TAG, "resultUpdateUUID: "+ namaPemilik);
+    public void resultUpdateUUID(String namaPemilik) {
         if (!namaPemilik.equals("")){
             showDialogUUID(namaPemilik);
         } else {
@@ -260,18 +251,17 @@ public class MainActivity extends AppCompatActivity{
         progressDialog.dismiss();
     }
 
-    private void checkExistingUser() {
-        Log.e(TAG, "checkExistingUser: "+ uuid );
-        ServerUnpas getNameUUID = new ServerUnpas(MainActivity.this,"get_nama_uuid");
-        synchronized (MainActivity.this){
-            getNameUUID.getNamaUUID(uuid);
-        }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     private void showDialogUUIDExist(){
         final Dialog uuidDialog = new Dialog(this);
         uuidDialog.setContentView(R.layout.wrong_uuid_layout);
         uuidDialog.setCanceledOnTouchOutside(false);
+        uuidDialog.setCancelable(false);
         TextView textViewNamaUUID = uuidDialog.findViewById(R.id.uuid_nama_server);
         textViewNamaUUID.setText(R.string.registered);
 
@@ -336,8 +326,7 @@ public class MainActivity extends AppCompatActivity{
         displaySuccess();
     }
 
-    private void sendUserToLoginActivity() {
-        Log.e(TAG, "sendUserToLoginActivity: ");
+    public void sendUserToLoginActivity() {
         dbHandler.deleteAll();
         Intent intentLogin = new Intent(MainActivity.this, LoginActivity.class);
         intentLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -385,7 +374,6 @@ public class MainActivity extends AppCompatActivity{
 
     private void sendUserToQRActivity() {
         Intent intentQR = new Intent(MainActivity.this, QRActivity.class);
-        Log.e(TAG, "sendUserToQRActivity: "+ matikanBluetooth);
         intentQR.putExtra("MATIKAN_BT", matikanBluetooth);
         intentQR.putExtra("NOMOR_INDUK", nomor_induk);
         startActivity(intentQR);

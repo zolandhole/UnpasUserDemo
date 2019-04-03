@@ -84,17 +84,15 @@ public class ServerUnpas {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.optString("error").equals("true")){
-                                status = "failed";
+                                Log.e(TAG, "onResponse: sendUUID " + jsonObject.getJSONArray("message"));
                             } else if (jsonObject.optString("error").equals("false")){
-                                status = "success";
                                 JSONArray jsonArray = jsonObject.getJSONArray("message");
                                 for (int i=0; i < jsonArray.length(); i++){
                                     JSONObject dataServer = jsonArray.getJSONObject(i);
                                     namaPemilik = dataServer.getString("nama_pemilik");
                                 }
                             }
-                            Log.e(TAG, "onResponse: " + namaPemilik);
-                            mainActivity.resultUpdateUUID(status, namaPemilik);
+                            mainActivity.resultUpdateUUID(namaPemilik);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.e(TAG, "onResponse: exception "+ e);
@@ -120,7 +118,6 @@ public class ServerUnpas {
     }
 
     public void getData (final String username, final String password){
-        Log.e(TAG, "getData: ");
         StringRequest stringRequest = new StringRequest(Request.Method.POST, ServerSide.POST_LOGIN,
                 new Response.Listener<String>() {
                     @Override
@@ -155,6 +152,7 @@ public class ServerUnpas {
                                         String errorMessage = jsonObject.getString("message");
                                         mainActivity.displaySuccess();
                                         Toast.makeText(mainActivity, errorMessage, Toast.LENGTH_LONG).show();
+                                        mainActivity.sendUserToLoginActivity();
                                     } else if (jsonObject.optString("error").equals("false")){
                                         JSONArray jsonArray = jsonObject.getJSONArray("message");
                                         ModelUser dataUser = new ModelUser();
