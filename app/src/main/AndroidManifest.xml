@@ -16,9 +16,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="n">
+        <activity android:name=".JadwalMahasiswaActivity"></activity>
         <activity
-            android:windowSoftInputMode="adjustResize"
-            android:name=".PengumumanActivity" />
+            android:name=".PengumumanActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".QRActivity"
             android:configChanges="orientation|screenSize" />
