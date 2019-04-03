@@ -214,13 +214,37 @@
             android:layout_margin="18dp"
             android:orientation="vertical">
 
-            <TextView
-                android:fontFamily="@font/robotolight"
-                android:textStyle="bold"
+            <LinearLayout
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/pengumuman"
-                android:textColor="@color/hejotaikuda"/>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_gravity="bottom"
+                    android:fontFamily="@font/robotolight"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pengumuman"
+                    android:textColor="@color/hejotaikuda"/>
+
+                <RelativeLayout
+                    android:id="@+id/main_rl_tambah"
+                    android:background="@drawable/border"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_margin="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_add_black_24dp"
+                        android:textColor="@color/hejotaikuda"/>
+                </RelativeLayout>
+            </LinearLayout>
+
             <RelativeLayout
                 android:background="@drawable/border"
                 android:layout_width="match_parent"

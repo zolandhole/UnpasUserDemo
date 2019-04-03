@@ -27,4 +27,17 @@
     <string name="exit">Keluar</string>
     <string name="login">login</string>
     <string name="registered">Akun yang anda masukan sudah terdaftar di perangkat lain</string>
+    <string name="tambah">TAMBAH</string>
+    <string name="pengumunan_ditujukan_ke">Pengumunan ditujukan ke :</string>
+    <string name="dosen_matakuliah">Dosen Matakuliah :</string>
+    <string name="mahasiswa_jurusan">Mahasiswa Jurusan :</string>
+    <string name="kembali">Kembali</string>
+    <string name="lanjutkan">Lanjutkan</string>
+
+    <string name="arrayTujuan">Pilih tujuan …</string>
+    <string-array name="tujuan_arrays">
+        <item>Dosen</item>
+        <item>Mahasiswa</item>
+        <item>Semua</item>
+    </string-array>
 </resources>

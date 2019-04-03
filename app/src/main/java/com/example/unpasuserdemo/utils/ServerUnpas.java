@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -258,6 +259,31 @@ public class ServerUnpas {
             protected Map<String, String> getParams(){
                 Map<String,String> params = new HashMap<>();
                 params.put("uuid", uuidServer);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+
+    public void getDataTujuan(final String typeUser){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ServerSide.POST_TUJUAN_PENGUMUMAN,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("type_user", typeUser);
                 return params;
             }
         };
