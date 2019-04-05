@@ -33,6 +33,9 @@
     <string name="mahasiswa_jurusan">Mahasiswa Jurusan :</string>
     <string name="kembali">Kembali</string>
     <string name="lanjutkan">Lanjutkan</string>
+    <string name="pilih_matakuliah">Pilih Maatakuliah</string>
+    <string name="pilih_dosen">Pilih Dosen</string>
+    <string name="dosen">Nama Dosen</string>
 
     <string name="arrayTujuan">Pilih tujuan …</string>
     <string-array name="tujuan_arrays">

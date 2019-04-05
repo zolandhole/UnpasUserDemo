@@ -16,6 +16,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="n">
+        <activity android:name=".LapAbsensi"
+            android:configChanges="orientation|screenSize">
+
+        </activity>
         <activity android:name=".JadwalMahasiswaActivity" />
         <activity
             android:name=".PengumumanActivity"
