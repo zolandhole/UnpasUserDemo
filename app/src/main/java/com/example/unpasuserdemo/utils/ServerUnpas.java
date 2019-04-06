@@ -33,6 +33,7 @@ public class ServerUnpas {
     private Context context;
     private String aktifitas, status;
     private List<ModelJadwal> listJadwal;
+    private List<String> jamJadwal, jamMatakuliah;
 
     public ServerUnpas(Context context, String aktifitas){
         this.context = context;
@@ -300,29 +301,45 @@ public class ServerUnpas {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        JadwalMahasiswaActivity jadwalMahasiswaActivity = (JadwalMahasiswaActivity) context;
-                        listJadwal = new ArrayList<>();
+
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.optString("error").equals("true")){
                                 Log.e(TAG, "onResponse: Error True" + jsonObject.getString("message"));
                             } else {
                                 JSONArray jsonArray = jsonObject.getJSONArray("message");
-                                for (int i=0; i<jsonArray.length(); i++){
-                                    JSONObject dataServer = jsonArray.getJSONObject(i);
-                                    ModelJadwal modelJadwal = new ModelJadwal();
-                                    modelJadwal.setNim(dataServer.getString("nim"));
-                                    modelJadwal.setNama(dataServer.getString("nama"));
-                                    modelJadwal.setNama_jurusan(dataServer.getString("nama_jurusan"));
-                                    modelJadwal.setNama_fakultas(dataServer.getString("nama_fakultas"));
-                                    modelJadwal.setNama_matakuliah(dataServer.getString("nama_matakuliah"));
-                                    modelJadwal.setNama_dosen(dataServer.getString("nama_dosen"));
-                                    modelJadwal.setJam_mulai(dataServer.getString("jam_mulai"));
-                                    modelJadwal.setJam_selesai(dataServer.getString("jam_selesai"));
-                                    modelJadwal.setNama_ruangan(dataServer.getString("nama_ruangan"));
-                                    listJadwal.add(modelJadwal);
+                                switch (aktifitas){
+                                    case "getJadwalKuliah":
+                                        JadwalMahasiswaActivity jadwalMahasiswaActivity = (JadwalMahasiswaActivity) context;
+                                        listJadwal = new ArrayList<>();
+                                        for (int i=0; i<jsonArray.length(); i++){
+                                            JSONObject dataServer = jsonArray.getJSONObject(i);
+                                            ModelJadwal modelJadwal = new ModelJadwal();
+                                            modelJadwal.setNim(dataServer.getString("nim"));
+                                            modelJadwal.setNama(dataServer.getString("nama"));
+                                            modelJadwal.setNama_jurusan(dataServer.getString("nama_jurusan"));
+                                            modelJadwal.setNama_fakultas(dataServer.getString("nama_fakultas"));
+                                            modelJadwal.setNama_matakuliah(dataServer.getString("nama_matakuliah"));
+                                            modelJadwal.setNama_dosen(dataServer.getString("nama_dosen"));
+                                            modelJadwal.setJam_mulai(dataServer.getString("jam_mulai"));
+                                            modelJadwal.setJam_selesai(dataServer.getString("jam_selesai"));
+                                            modelJadwal.setNama_ruangan(dataServer.getString("nama_ruangan"));
+                                            listJadwal.add(modelJadwal);
+                                        }
+                                        jadwalMahasiswaActivity.resultGetJadwal(listJadwal);
+                                        break;
+                                    case "getJadwalForService":
+                                        MainActivity mainActivity = (MainActivity) context;
+                                        jamJadwal = new ArrayList<>();
+                                        jamMatakuliah = new ArrayList<>();
+                                        for (int i=0; i<jsonArray.length(); i++){
+                                            JSONObject dataServer = jsonArray.getJSONObject(i);
+                                            jamMatakuliah.add(dataServer.getString("nama_matakuliah"));
+                                            jamJadwal.add(dataServer.getString("jam_mulai"));
+                                        }
+                                        mainActivity.resultGetJadwalForService(jamJadwal, jamMatakuliah);
+                                        break;
                                 }
-                                jadwalMahasiswaActivity.resultGetJadwal(listJadwal);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

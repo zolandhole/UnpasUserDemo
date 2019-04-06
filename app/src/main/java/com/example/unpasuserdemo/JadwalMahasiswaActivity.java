@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 public class JadwalMahasiswaActivity extends AppCompatActivity {
 
+    private static final String TAG = "JadwalMahasiswaActivity";
     private RecyclerView recyclerView;
     private String nomor_induk;
 
@@ -29,6 +31,13 @@ public class JadwalMahasiswaActivity extends AppCompatActivity {
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
+//        initView();
+//        initRunning();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         initView();
         initRunning();
     }
@@ -43,6 +52,9 @@ public class JadwalMahasiswaActivity extends AppCompatActivity {
     private void initView() {
         recyclerView = findViewById(R.id.jadwal_rv);
         nomor_induk = Objects.requireNonNull(getIntent().getExtras()).getString("NOMOR_INDUK");
+        if (nomor_induk == null){
+            Log.e(TAG, "initView: "+ nomor_induk);
+        }
     }
 
     public void resultGetJadwal(List<ModelJadwal> listJadwal) {
