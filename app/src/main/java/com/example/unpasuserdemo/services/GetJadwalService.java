@@ -1,16 +1,14 @@
 package com.example.unpasuserdemo.services;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.CountDownTimer;
+import android.graphics.Color;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.example.unpasuserdemo.JadwalMahasiswaActivity;
-import com.example.unpasuserdemo.MainActivity;
 import com.example.unpasuserdemo.R;
 
 import java.text.SimpleDateFormat;
@@ -23,15 +21,19 @@ import java.util.TimerTask;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import static android.content.ContentValues.TAG;
 import static com.example.unpasuserdemo.services.App.CHANNEL_ID;
 
 public class GetJadwalService extends Service {
 
+    private NotificationManagerCompat notificationManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        notificationManager = NotificationManagerCompat.from(this);
     }
 
     @Override
@@ -40,11 +42,12 @@ public class GetJadwalService extends Service {
         ArrayList<String> jamMatakuliah = intent.getStringArrayListExtra("JAMMATAKULIAH");
         String nomor_induk = intent.getStringExtra("NOMOR_INDUK");
 
-        final Intent intentNotification = new Intent(this, JadwalMahasiswaActivity.class);
-        intentNotification.putExtra("NOMOR_INDUK", nomor_induk);
-        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intentNotification,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        @SuppressLint("ResourceAsColor") final Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+        Intent intentNotification = new Intent(this, JadwalMahasiswaActivity.class);
+        intentNotification.putExtra("NOMOR_INDUK", nomor_induk);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intentNotification,0);
+
+        final Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Mata Kuliah")
                 .setContentText(jamJadwal.toString())
                 .setSmallIcon(R.drawable.logounpas)
@@ -52,7 +55,8 @@ public class GetJadwalService extends Service {
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setColor(R.color.hejotaikuda)
+                .setColor(Color.GREEN)
+                .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .build();
 
@@ -78,7 +82,7 @@ public class GetJadwalService extends Service {
                         if (perbedaanJam == 0){
                             if (perbedaanMenit >0 && perbedaanMenit <=15){
                                 Log.e(TAG, "resultGetJadwalForService: Tampilkan Notifikasi");
-                                startForeground(1, notification);
+                                notificationManager.notify(1,notification);
                             } else {
                                 Log.e(TAG, "resultGetJadwalForService: Jangan Tampilkan Notifikasi");
                             }

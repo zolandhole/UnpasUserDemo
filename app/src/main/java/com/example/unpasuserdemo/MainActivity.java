@@ -3,10 +3,6 @@ package com.example.unpasuserdemo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -32,13 +28,9 @@ import com.example.unpasuserdemo.models.ModelUser;
 import com.example.unpasuserdemo.services.GetJadwalService;
 import com.example.unpasuserdemo.utils.ServerUnpas;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -52,9 +44,8 @@ public class MainActivity extends AppCompatActivity{
     private RelativeLayout main_rl_tambah;
     private ProgressDialog progressDialog;
     private DBHandler dbHandler;
-    private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password, uuid, serverUUID, matikanBluetooth, datePhone;
+    private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password, uuid, serverUUID, matikanBluetooth;
     private BluetoothAdapter bluetoothAdapter;
-    private Long perbedaanMenit, perbedaanJam;
 
     private final BroadcastReceiver receiverBTEnable = new BroadcastReceiver() {
         @Override
@@ -114,8 +105,6 @@ public class MainActivity extends AppCompatActivity{
 
         initRunning();
 
-        getJadwalForService();
-
         uuid = "35" + //we make this look like a valid IMEI
                 Build.BOARD.length()%10+ Build.BRAND.length()%10 +
                 Build.CPU_ABI.length()%10 + Build.DEVICE.length()%10 +
@@ -125,8 +114,7 @@ public class MainActivity extends AppCompatActivity{
                 Build.TAGS.length()%10 + Build.TYPE.length()%10 +
                 Build.USER.length()%10 ; //13 digits
 
-//        runningService();
-//        getDataFromService();
+        getJadwalForService();
     }
 
     private void getJadwalForService() {
@@ -143,57 +131,7 @@ public class MainActivity extends AppCompatActivity{
         intentService.putStringArrayListExtra("JAMMATAKULIAH",(ArrayList<String>) jamMatakuliah);
         intentService.putExtra("NOMOR_INDUK", nomor_induk);
         startService(intentService);
-
-//        SimpleDateFormat dtf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-//        Calendar datetimeKalender = Calendar.getInstance();
-//        Date date= datetimeKalender.getTime();
-//        datePhone = dtf.format(date);
-
-//        for (int i=0; i< jamJadwal.size(); i++){
-//            Log.e(TAG, "resultGetJadwalForService: " + jamJadwal.get(i));
-//            Date jamPhone, jadwal;
-//            try {
-//                jamPhone = dtf.parse(datePhone);
-//                jadwal = dtf.parse(jamJadwal.get(i));
-//                long diff = jadwal.getTime() - jamPhone.getTime();
-//                perbedaanMenit = diff / (60*1000)%60;
-//                perbedaanJam = diff / (60*60*1000)%60;
-//            } catch (Exception e){
-//                e.printStackTrace();
-//            }
-//
-//            if (perbedaanJam == 0){
-//                if (perbedaanMenit >0 && perbedaanMenit <=15){
-//                    Log.e(TAG, "resultGetJadwalForService: Tampilkan Notifikasi");
-//                } else {
-//                    Log.e(TAG, "resultGetJadwalForService: Jangan Tampilkan Notifikasi");
-//                }
-//            } else {
-//                Log.e(TAG, "resultGetJadwalForService: Kadar Luarsa");
-//            }
-//        }
     }
-
-//    private void getDataFromService() {
-//        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
-//                messageReceiver, new IntentFilter("DATA_SERVICE")
-//        );
-//    }
-
-//    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String tai = intent.getStringExtra("DATA_SERVER");
-//            Log.e(TAG, "onReceive: messageReceiver" + tai);
-//        }
-//    };
-
-
-//    private void runningService() {
-//        Intent intent = new Intent(this, GetJadwalService.class);
-//        intent.putExtra("NOMOR_INDUK", nomor_induk);
-//        startService(intent);
-//    }
 
     @Override
     public void onBackPressed() {
@@ -210,7 +148,6 @@ public class MainActivity extends AppCompatActivity{
 
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
