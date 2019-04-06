@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -12,15 +11,19 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.unpasuserdemo.InputMacActivity;
+import com.example.unpasuserdemo.JadwalMahasiswaActivity;
 import com.example.unpasuserdemo.LoginActivity;
 import com.example.unpasuserdemo.MainActivity;
+import com.example.unpasuserdemo.models.ModelJadwal;
 import com.example.unpasuserdemo.models.ModelUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.android.volley.VolleyLog.TAG;
@@ -29,6 +32,7 @@ public class ServerUnpas {
 
     private Context context;
     private String aktifitas, status;
+    private List<ModelJadwal> listJadwal;
 
     public ServerUnpas(Context context, String aktifitas){
         this.context = context;
@@ -284,6 +288,58 @@ public class ServerUnpas {
             protected Map<String, String> getParams(){
                 Map<String,String> params = new HashMap<>();
                 params.put("type_user", typeUser);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+
+    public void getDataJadwal(final String nomor_induk){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ServerSide.GET_JADWAL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JadwalMahasiswaActivity jadwalMahasiswaActivity = (JadwalMahasiswaActivity) context;
+                        listJadwal = new ArrayList<>();
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.optString("error").equals("true")){
+                                Log.e(TAG, "onResponse: Error True" + jsonObject.getString("message"));
+                            } else {
+                                JSONArray jsonArray = jsonObject.getJSONArray("message");
+                                for (int i=0; i<jsonArray.length(); i++){
+                                    JSONObject dataServer = jsonArray.getJSONObject(i);
+                                    ModelJadwal modelJadwal = new ModelJadwal();
+                                    modelJadwal.setNim(dataServer.getString("nim"));
+                                    modelJadwal.setNama(dataServer.getString("nama"));
+                                    modelJadwal.setNama_jurusan(dataServer.getString("nama_jurusan"));
+                                    modelJadwal.setNama_fakultas(dataServer.getString("nama_fakultas"));
+                                    modelJadwal.setNama_matakuliah(dataServer.getString("nama_matakuliah"));
+                                    modelJadwal.setNama_dosen(dataServer.getString("nama_dosen"));
+                                    modelJadwal.setJam_mulai(dataServer.getString("jam_mulai"));
+                                    modelJadwal.setJam_selesai(dataServer.getString("jam_selesai"));
+                                    modelJadwal.setNama_ruangan(dataServer.getString("nama_ruangan"));
+                                    listJadwal.add(modelJadwal);
+                                }
+                                jadwalMahasiswaActivity.resultGetJadwal(listJadwal);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "onResponse: Exception" + e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "onErrorResponse: getDataJadwal" + error);
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("nomor_induk", nomor_induk);
                 return params;
             }
         };

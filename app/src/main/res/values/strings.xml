@@ -38,6 +38,15 @@
     <string name="dosen">Nama Dosen</string>
 
     <string name="arrayTujuan">Pilih tujuan …</string>
+    <string name="nim">NIM</string>
+    <string name="nama_re">Nama</string>
+    <string name="jurusan_re">Jurusan</string>
+    <string name="fakultas_re">Fakultas</string>
+    <string name="matakuliah_re">Matakuliah</string>
+    <string name="dosen_re">Dosen</string>
+    <string name="jam_mulai">Jam Mulai</string>
+    <string name="jam_selesai">Jam Selesai</string>
+    <string name="ruangan_re">Ruangan</string>
     <string-array name="tujuan_arrays">
         <item>Dosen</item>
         <item>Mahasiswa</item>

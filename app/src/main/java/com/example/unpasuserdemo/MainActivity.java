@@ -366,6 +366,12 @@ public class MainActivity extends AppCompatActivity{
         startActivity(intentPengumuman);
     }
 
+    private void sendUserToJadwalMahasiswaActivity() {
+        Intent intentJadwal = new Intent(MainActivity.this, JadwalMahasiswaActivity.class);
+        intentJadwal.putExtra("NOMOR_INDUK", nomor_induk);
+        startActivity(intentJadwal);
+    }
+
     private void menuMahasiswa(){
         linearLayoutMenu.setWeightSum(3);
         cardViewForum.setVisibility(View.VISIBLE);
@@ -431,7 +437,7 @@ public class MainActivity extends AppCompatActivity{
         cardViewJadwal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Jadwal Activity", Toast.LENGTH_SHORT).show();
+                sendUserToJadwalMahasiswaActivity();
             }
         });
 
