@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:text="@string/nama"
             android:textAllCaps="true"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:fontFamily="@font/robotobold"
             android:textAlignment="center"
             android:textColor="@color/bodas"

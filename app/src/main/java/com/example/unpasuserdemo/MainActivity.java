@@ -311,8 +311,8 @@ public class MainActivity extends AppCompatActivity{
         textViewPeringatan.setVisibility(View.VISIBLE);
         textViewPeringatan2.setVisibility(View.VISIBLE);
 
-        Button buttonKeluar = uuidDialog.findViewById(R.id.uuid_button_keluar);
-        Button buttonLogin = uuidDialog.findViewById(R.id.uuid_button_login);
+        CardView buttonKeluar = uuidDialog.findViewById(R.id.uuid_button_keluar);
+        CardView buttonLogin = uuidDialog.findViewById(R.id.uuid_button_login);
         buttonKeluar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

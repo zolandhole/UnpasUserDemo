@@ -1,111 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:layout_margin="8dp"
-        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        android:layout_marginTop="1.5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:padding="8dp"
-            android:orientation="horizontal"
             android:weightSum="2"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:baselineAligned="false">
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight=".7"
+                android:layout_weight="0.4"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                tools:ignore="UselessParent">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/nim"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/nama_re"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/jurusan_re"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fakultas_re"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/matakuliah_re"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dosen_re"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/jam_mulai"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/jam_selesai"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/ruangan_re"/>
-            </LinearLayout>
-            <LinearLayout
                 android:orientation="vertical"
-                android:layout_weight="1.3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                tools:ignore="UselessParent">
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:background="@color/birujadwal">
                 <TextView
-                    android:id="@+id/rjm_nim"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/rjm_nama"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/rjm_jurusan"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/rjm_fakultas"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/rjm_matakuliah"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/rjm_dosen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/rjm_mulai"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/rjm_selesai"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/rjm_ruangan"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/robotobold"
+                    android:textColor="@color/bodas"
+                    android:text="@string/hp"
+                    android:textSize="35sp"/>
+
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_marginStart="1.5dp"
+                android:padding="10dp"
+                android:layout_weight="1.6"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/birujadwal">
+
+                <TextView
+                    android:id="@+id/rpm_matakuliah"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@string/mata_kuliah"/>
+
+                <TextView
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/rpm_dosen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dosen"
+                    android:layout_below="@+id/rpm_matakuliah"/>
+
+                <TextView
+                    android:id="@+id/rpm_ruangan"
+                    android:layout_alignParentStart="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ruang_hukum"
+                    android:layout_below="@id/rpm_dosen"/>
+
+                <TextView
+                    android:id="@+id/rpm_jam"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/jam"
+                    android:textSize="12sp"
+                    android:textColor="@color/biruwa"
+                    tools:ignore="RelativeOverlap" />
+            </RelativeLayout>
+
+
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 </LinearLayout>

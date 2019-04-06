@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,21 +10,20 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Jadwal Kuliah"
+        android:paddingStart="20dp"
+        android:paddingEnd="0dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/jadwal_kuliah"
         android:textStyle="bold"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textColor="@color/bodas"
-        android:textAlignment="center"
+        android:background="@color/birujadwal2"
+        android:fontFamily="@font/robotobold"
         android:layout_marginTop="30dp" />
 
-    <View
-        android:layout_marginTop="10dp"
-        android:background="@color/bodas"
-        android:layout_width="match_parent"
-        android:layout_height="1dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="10dp"
         android:id="@+id/jadwal_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -21,7 +21,7 @@
     <string name="memperbaharui_qr_core">memperbaharui QR Code</string>
     <string name="selesai">Selesai</string>
     <string name="denied">kembalikan</string>
-    <string name="peringatan">Perangkat ini sudah terintegrasi dengan akun </string>
+    <string name="peringatan">Perangkat ini sudah terintegrasi \ndengan akun </string>
     <string name="peringatan2">Hubungi Administrator jika merasa ini adalah perangkat anda</string>
     <string name="nama">Yadi</string>
     <string name="exit">Keluar</string>
@@ -47,6 +47,11 @@
     <string name="jam_mulai">Jam Mulai</string>
     <string name="jam_selesai">Jam Selesai</string>
     <string name="ruangan_re">Ruangan</string>
+    <string name="hp">HP</string>
+    <string name="mata_kuliah">Mata Kuliah</string>
+    <string name="ruang_hukum">Ruang Hukum</string>
+    <string name="jam">08:30</string>
+    <string name="jadwal_kuliah">Jadwal Kuliah</string>
     <string-array name="tujuan_arrays">
         <item>Dosen</item>
         <item>Mahasiswa</item>
