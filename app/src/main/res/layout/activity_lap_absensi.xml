@@ -137,7 +137,7 @@
             android:layout_marginBottom="8dp"
             android:background="@android:color/transparent"
             android:text="@string/selesai"
-            android:textColor="@color/putih"
+            android:textColor="@color/bodas"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -164,15 +164,15 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="@string/nointernet"
+            android:text="tidak ada koneksi internet"
             android:textAlignment="center"
-            android:textColor="@color/putih"
+            android:textColor="@color/bodas"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/cvRetryForm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -189,9 +189,8 @@
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_refresh_white_24dp" />
-        </androidx.support.v7.widget.CardView>
+                android:contentDescription="@null" />
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
