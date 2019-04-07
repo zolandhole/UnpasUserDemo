@@ -3,7 +3,6 @@ package com.example.unpasuserdemo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity{
     private RelativeLayout main_rl_tambah;
     private ProgressDialog progressDialog;
     private DBHandler dbHandler;
-    private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password, uuid, serverUUID, matikanBluetooth;
+    private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password, uuid, serverUUID, matikanBluetooth, typeUser;
     private BluetoothAdapter bluetoothAdapter;
 
     private final BroadcastReceiver receiverBTEnable = new BroadcastReceiver() {
@@ -121,7 +120,9 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onStop() {
         super.onStop();
-        getJadwalForService();
+        if (!typeUser.equals("8")){
+            getJadwalForService();
+        }
     }
 
     private void getJadwalForService() {
@@ -422,9 +423,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void userType() {
-        Log.e(TAG, "userType: " + nomor_induk);
-        String typeUser = nomor_induk.substring(0,1);
-        Log.e(TAG, "userType: " + typeUser);
+        typeUser = nomor_induk.substring(0,1);
         switch (typeUser) {
             case "9":
                 menuDosen();
@@ -442,9 +441,7 @@ public class MainActivity extends AppCompatActivity{
         cardViewForum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(MainActivity.this, "Forum Activity", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, FeedService.class);
-                startActivity(intent);
+                Toast.makeText(MainActivity.this, "Forum Activity", Toast.LENGTH_SHORT).show();
             }
         });
 

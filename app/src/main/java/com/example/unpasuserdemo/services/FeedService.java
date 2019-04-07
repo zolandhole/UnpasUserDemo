@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,11 +31,13 @@ public class FeedService extends AppCompatActivity {
         for(Map<String, String> map : userDb) {
             nomor_induk = map.get("nomor_induk");
         }
-        if (nomor_induk == null || nomor_induk.equals("")){
-            finish();
-        }else {
-            GetDataForService();
+        if (nomor_induk != null || !Objects.equals(nomor_induk, "")){
+            String typeUser = nomor_induk.substring(0,1);
+            if (!typeUser.equals("8")){
+                GetDataForService();
+            }
         }
+        finish();
     }
 
     private void GetDataForService() {
