@@ -16,6 +16,7 @@ import com.example.unpasuserdemo.LoginActivity;
 import com.example.unpasuserdemo.MainActivity;
 import com.example.unpasuserdemo.models.ModelJadwal;
 import com.example.unpasuserdemo.models.ModelUser;
+import com.example.unpasuserdemo.services.FeedService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -338,6 +339,17 @@ public class ServerUnpas {
                                             jamJadwal.add(dataServer.getString("jam_mulai"));
                                         }
                                         mainActivity.resultGetJadwalForService(jamJadwal, jamMatakuliah);
+                                        break;
+                                    case "GetDataForService":
+                                        FeedService feedService = (FeedService) context;
+                                        jamJadwal = new ArrayList<>();
+                                        jamMatakuliah = new ArrayList<>();
+                                        for (int i=0; i<jsonArray.length(); i++){
+                                            JSONObject dataServer = jsonArray.getJSONObject(i);
+                                            jamMatakuliah.add(dataServer.getString("nama_matakuliah"));
+                                            jamJadwal.add(dataServer.getString("jam_mulai"));
+                                        }
+                                        feedService.resultGetDataForService(jamJadwal, jamMatakuliah);
                                         break;
                                 }
                             }

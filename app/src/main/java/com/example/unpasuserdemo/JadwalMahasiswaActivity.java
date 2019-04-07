@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.WindowManager;
 
 import com.example.unpasuserdemo.adapters.AdapterJadwal;
 import com.example.unpasuserdemo.models.ModelJadwal;
+import com.example.unpasuserdemo.services.NotificationReceiver;
 import com.example.unpasuserdemo.utils.ServerUnpas;
 
 import java.util.List;
@@ -42,6 +45,19 @@ public class JadwalMahasiswaActivity extends AppCompatActivity {
         initRunning();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        sendUserToMainActivity();
+    }
+
+    private void sendUserToMainActivity() {
+        Intent intentMain = new Intent(this,MainActivity.class);
+        intentMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intentMain);
+        finish();
+    }
+
     private void initRunning() {
         ServerUnpas getJadwalKuliah = new ServerUnpas(JadwalMahasiswaActivity.this,"getJadwalKuliah");
         synchronized (JadwalMahasiswaActivity.this) {
@@ -51,6 +67,7 @@ public class JadwalMahasiswaActivity extends AppCompatActivity {
 
     private void initView() {
         recyclerView = findViewById(R.id.jadwal_rv);
+
         nomor_induk = Objects.requireNonNull(getIntent().getExtras()).getString("NOMOR_INDUK");
         if (nomor_induk == null){
             Log.e(TAG, "initView: "+ nomor_induk);

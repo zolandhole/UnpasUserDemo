@@ -33,19 +33,24 @@ public class GetJadwalService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        notificationManager = NotificationManagerCompat.from(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        notificationManager = NotificationManagerCompat.from(this);
+
         final ArrayList<String> jamJadwal = intent.getStringArrayListExtra("JAMJADWAL");
         ArrayList<String> jamMatakuliah = intent.getStringArrayListExtra("JAMMATAKULIAH");
         String nomor_induk = intent.getStringExtra("NOMOR_INDUK");
 
-
         Intent intentNotification = new Intent(this, JadwalMahasiswaActivity.class);
         intentNotification.putExtra("NOMOR_INDUK", nomor_induk);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intentNotification,0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intentNotification,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intentBroadcast = new Intent(this,NotificationReceiver.class);
+        intentBroadcast.putExtra("toastMessage", nomor_induk);
+        PendingIntent actionIntent = PendingIntent.getBroadcast(this,0,intentBroadcast,PendingIntent.FLAG_UPDATE_CURRENT);
 
         final Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Mata Kuliah")
@@ -54,7 +59,7 @@ public class GetJadwalService extends Service {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setCategory(NotificationCompat.CATEGORY_EVENT)
                 .setColor(Color.GREEN)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
@@ -80,11 +85,11 @@ public class GetJadwalService extends Service {
                         long perbedaanMenit = diff / (60*1000)%60;
                         long perbedaanJam = diff / (60*60*1000)%60;
                         if (perbedaanJam == 0){
-                            if (perbedaanMenit >0 && perbedaanMenit <=15){
+                            if (perbedaanMenit == 15){
                                 Log.e(TAG, "resultGetJadwalForService: Tampilkan Notifikasi");
-                                notificationManager.notify(1,notification);
+                                notificationManager.notify(1, notification);
                             } else {
-                                Log.e(TAG, "resultGetJadwalForService: Jangan Tampilkan Notifikasi");
+                                Log.e(TAG, "resultGetJadwalForService: Jangan Tampilkan Notifikasi, perbedaan = " + perbedaanMenit);
                             }
                         } else {
                             Log.e(TAG, "resultGetJadwalForService: Kadar Luarsa");
@@ -96,7 +101,7 @@ public class GetJadwalService extends Service {
                 }
             }
 
-        }, 0, 1000 * 60 * 5);
+        }, 0, 1000 * 60);
         return START_REDELIVER_INTENT;
     }
 

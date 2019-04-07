@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.unpasuserdemo.handlers.DBHandler;
 import com.example.unpasuserdemo.models.ModelUser;
+import com.example.unpasuserdemo.services.FeedService;
 import com.example.unpasuserdemo.services.GetJadwalService;
 import com.example.unpasuserdemo.utils.ServerUnpas;
 
@@ -114,6 +115,12 @@ public class MainActivity extends AppCompatActivity{
                 Build.TAGS.length()%10 + Build.TYPE.length()%10 +
                 Build.USER.length()%10 ; //13 digits
 
+//        getJadwalForService();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         getJadwalForService();
     }
 
@@ -435,7 +442,9 @@ public class MainActivity extends AppCompatActivity{
         cardViewForum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Forum Activity", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Forum Activity", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, FeedService.class);
+                startActivity(intent);
             }
         });
 
