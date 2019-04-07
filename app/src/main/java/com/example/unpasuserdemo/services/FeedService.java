@@ -3,7 +3,6 @@ package com.example.unpasuserdemo.services;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.unpasuserdemo.handlers.DBHandler;
 import com.example.unpasuserdemo.utils.ServerUnpas;

@@ -57,10 +57,6 @@
         <service
             android:enabled="true"
             android:name=".services.GetJadwalService" />
-        <receiver
-            android:name=".services.NotificationReceiver"
-            android:enabled="true"
-            android:process=":remote"/>
     </application>
 
 </manifest>

@@ -3,6 +3,8 @@ package com.example.unpasuserdemo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -114,8 +116,6 @@ public class MainActivity extends AppCompatActivity{
                 Build.MODEL.length()%10 + Build.PRODUCT.length()%10 +
                 Build.TAGS.length()%10 + Build.TYPE.length()%10 +
                 Build.USER.length()%10 ; //13 digits
-
-//        getJadwalForService();
     }
 
     @Override

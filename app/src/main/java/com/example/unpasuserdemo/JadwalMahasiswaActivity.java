@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.WindowManager;
 
 import com.example.unpasuserdemo.adapters.AdapterJadwal;
 import com.example.unpasuserdemo.models.ModelJadwal;
-import com.example.unpasuserdemo.services.NotificationReceiver;
 import com.example.unpasuserdemo.utils.ServerUnpas;
 
 import java.util.List;

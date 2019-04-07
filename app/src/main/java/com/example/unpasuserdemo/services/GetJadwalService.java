@@ -29,6 +29,8 @@ import static com.example.unpasuserdemo.services.App.CHANNEL_ID;
 public class GetJadwalService extends Service {
 
     private NotificationManagerCompat notificationManager;
+    private ArrayList<String> jamJadwal, jamMatakuliah;
+    private long perbedaanJam, perbedaanMenit;
 
     @Override
     public void onCreate() {
@@ -40,30 +42,15 @@ public class GetJadwalService extends Service {
 
         notificationManager = NotificationManagerCompat.from(this);
 
-        final ArrayList<String> jamJadwal = intent.getStringArrayListExtra("JAMJADWAL");
-        ArrayList<String> jamMatakuliah = intent.getStringArrayListExtra("JAMMATAKULIAH");
+        jamJadwal = intent.getStringArrayListExtra("JAMJADWAL");
+        jamMatakuliah = intent.getStringArrayListExtra("JAMMATAKULIAH");
         String nomor_induk = intent.getStringExtra("NOMOR_INDUK");
 
         Intent intentNotification = new Intent(this, JadwalMahasiswaActivity.class);
         intentNotification.putExtra("NOMOR_INDUK", nomor_induk);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intentNotification,PendingIntent.FLAG_UPDATE_CURRENT);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intentNotification,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intentBroadcast = new Intent(this,NotificationReceiver.class);
-        intentBroadcast.putExtra("toastMessage", nomor_induk);
-        PendingIntent actionIntent = PendingIntent.getBroadcast(this,0,intentBroadcast,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        final Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Mata Kuliah")
-                .setContentText(jamJadwal.toString())
-                .setSmallIcon(R.drawable.logounpas)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_EVENT)
-                .setColor(Color.GREEN)
-                .setContentIntent(pendingIntent)
-                .setOnlyAlertOnce(true)
-                .build();
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -78,16 +65,17 @@ public class GetJadwalService extends Service {
                 for (int i=0; i< jamJadwal.size(); i++){
                     Log.e(TAG, "resultGetJadwalForService: " + jamJadwal.get(i));
                     Date jamPhone, jadwal;
+                    String mataKuliah;
                     try {
                         jamPhone = dtf.parse(datePhone);
                         jadwal = dtf.parse(jamJadwal.get(i));
                         long diff = jadwal.getTime() - jamPhone.getTime();
-                        long perbedaanMenit = diff / (60*1000)%60;
-                        long perbedaanJam = diff / (60*60*1000)%60;
+                        perbedaanMenit = diff / (60*1000)%60;
+                        perbedaanJam = diff / (60*60*1000)%60;
                         if (perbedaanJam == 0){
                             if (perbedaanMenit == 15){
-                                Log.e(TAG, "resultGetJadwalForService: Tampilkan Notifikasi");
-                                notificationManager.notify(1, notification);
+                                mataKuliah = jamMatakuliah.get(i);
+                                tampilkanNotifikasi(pendingIntent, mataKuliah);
                             } else {
                                 Log.e(TAG, "resultGetJadwalForService: Jangan Tampilkan Notifikasi, perbedaan = " + perbedaanMenit);
                             }
@@ -103,6 +91,23 @@ public class GetJadwalService extends Service {
 
         }, 0, 1000 * 60);
         return START_REDELIVER_INTENT;
+    }
+
+    private void tampilkanNotifikasi(PendingIntent pendingIntent, String mataKuliah) {
+        Log.e(TAG, "tampilkanNotifikasi: " + mataKuliah);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Jadwal Kuliah")
+                .setContentText("Persiapan matakuliah " + mataKuliah + " akan dimulai 15 menit lagi, jangan sampai telat ya. Absensi sudah bisa dilakukan.")
+                .setSmallIcon(R.drawable.logounpas)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_EVENT)
+                .setColor(Color.GREEN)
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true)
+                .build();
+        notificationManager.notify(1, notification);
     }
 
     @Override
