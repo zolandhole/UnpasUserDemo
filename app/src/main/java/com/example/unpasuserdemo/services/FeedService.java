@@ -67,7 +67,7 @@ public class FeedService extends AppCompatActivity {
 
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY, hours);
-            cal.set(Calendar.MINUTE, minutes);
+            cal.set(Calendar.MINUTE, minutes - 30);
             cal.set(Calendar.SECOND,0);
             cal.set(Calendar.MILLISECOND,0);
             if (!cal.before(Calendar.getInstance())) {

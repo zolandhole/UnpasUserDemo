@@ -45,7 +45,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle("Jadwal Kuliah")
                 .setContentText(message)
-                .setSmallIcon(R.drawable.logounpas)
+                .setSmallIcon(R.drawable.ic_unpas_notif)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
