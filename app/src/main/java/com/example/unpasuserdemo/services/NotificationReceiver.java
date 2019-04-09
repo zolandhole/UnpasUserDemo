@@ -34,10 +34,10 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         if (typeUser.equals("9")){
             intentNotification = new Intent(context, MainActivity.class);
-            message = "Mohon persiapan matakuliah " + matakuliah + " akan dimulai 15 menit lagi";
+            message = "Mohon persiapan matakuliah " + matakuliah + " akan dimulai 30 menit lagi";
         } else {
             intentNotification = new Intent(context, JadwalMahasiswaActivity.class);
-            message = "Persiapan matakuliah " + matakuliah + " akan dimulai 15 menit lagi, jangan sampai telat ya. Absensi sudah bisa dilakukan.";
+            message = "Persiapan matakuliah " + matakuliah + " akan dimulai 30 menit lagi, jangan sampai telat ya. Absensi sudah bisa dilakukan.";
         }
         intentNotification.putExtra("NOMOR_INDUK",nomor_induk);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0, intentNotification,PendingIntent.FLAG_UPDATE_CURRENT);
