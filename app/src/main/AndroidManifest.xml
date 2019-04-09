@@ -55,9 +55,6 @@
         <service
             android:enabled="true"
             android:name=".services.TriggerService" />
-        <service
-            android:enabled="true"
-            android:name=".services.GetJadwalService" />
     </application>
 
 </manifest>
