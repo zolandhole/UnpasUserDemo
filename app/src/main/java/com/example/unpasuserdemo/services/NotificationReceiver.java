@@ -28,7 +28,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         String message;
 
         Log.e(TAG, "onReceive: "+ matakuliah + typeUser + nomor_induk);
-        Toast.makeText(context, "TAI", Toast.LENGTH_SHORT).show();
         Intent intentNotification;
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
