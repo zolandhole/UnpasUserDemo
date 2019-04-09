@@ -27,12 +27,10 @@ import android.widget.Toast;
 import com.example.unpasuserdemo.handlers.DBHandler;
 import com.example.unpasuserdemo.models.ModelUser;
 import com.example.unpasuserdemo.services.FeedService;
-import com.example.unpasuserdemo.services.GetJadwalService;
 import com.example.unpasuserdemo.utils.ServerUnpas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -46,7 +44,15 @@ public class MainActivity extends AppCompatActivity{
     private RelativeLayout main_rl_tambah;
     private ProgressDialog progressDialog;
     private DBHandler dbHandler;
-    private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password, uuid, serverUUID, matikanBluetooth, typeUser;
+    private String idUser;
+    private String nomor_induk;
+    private String nama;
+    private String nama_jurusan;
+    private String mac_user;
+    private String password;
+    private String uuid;
+    private String serverUUID;
+    private String matikanBluetooth;
     private BluetoothAdapter bluetoothAdapter;
 
     private final BroadcastReceiver receiverBTEnable = new BroadcastReceiver() {
@@ -106,7 +112,6 @@ public class MainActivity extends AppCompatActivity{
         onClick();
 
         initRunning();
-
         uuid = "35" + //we make this look like a valid IMEI
                 Build.BOARD.length()%10+ Build.BRAND.length()%10 +
                 Build.CPU_ABI.length()%10 + Build.DEVICE.length()%10 +
@@ -118,27 +123,10 @@ public class MainActivity extends AppCompatActivity{
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        if (!typeUser.equals("8")){
-            getJadwalForService();
-        }
-    }
-
-    private void getJadwalForService() {
-        ServerUnpas getJadwalForService = new ServerUnpas(MainActivity.this, "getJadwalForService");
-        synchronized (MainActivity.this){
-            getJadwalForService.getDataJadwal(nomor_induk);
-        }
-    }
-
-    public void resultGetJadwalForService(List<String> jamJadwal, List<String> jamMatakuliah) {
-
-        Intent intentService = new Intent(this, GetJadwalService.class);
-        intentService.putStringArrayListExtra("JAMJADWAL",(ArrayList<String>) jamJadwal);
-        intentService.putStringArrayListExtra("JAMMATAKULIAH",(ArrayList<String>) jamMatakuliah);
-        intentService.putExtra("NOMOR_INDUK", nomor_induk);
-        startService(intentService);
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(MainActivity.this, FeedService.class);
+        startActivity(intent);
     }
 
     @Override
@@ -423,7 +411,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void userType() {
-        typeUser = nomor_induk.substring(0,1);
+        String typeUser = nomor_induk.substring(0, 1);
         switch (typeUser) {
             case "9":
                 menuDosen();

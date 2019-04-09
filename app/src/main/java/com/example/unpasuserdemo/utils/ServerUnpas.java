@@ -272,31 +272,6 @@ public class ServerUnpas {
         requestQueue.add(stringRequest);
     }
 
-    public void getDataTujuan(final String typeUser){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ServerSide.POST_TUJUAN_PENGUMUMAN,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }){
-            @Override
-            protected Map<String, String> getParams(){
-                Map<String,String> params = new HashMap<>();
-                params.put("type_user", typeUser);
-                return params;
-            }
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
-    }
-
     public void getDataJadwal(final String nomor_induk){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, ServerSide.GET_JADWAL,
                 new Response.Listener<String>() {
@@ -328,17 +303,6 @@ public class ServerUnpas {
                                             listJadwal.add(modelJadwal);
                                         }
                                         jadwalMahasiswaActivity.resultGetJadwal(listJadwal);
-                                        break;
-                                    case "getJadwalForService":
-                                        MainActivity mainActivity = (MainActivity) context;
-                                        jamJadwal = new ArrayList<>();
-                                        jamMatakuliah = new ArrayList<>();
-                                        for (int i=0; i<jsonArray.length(); i++){
-                                            JSONObject dataServer = jsonArray.getJSONObject(i);
-                                            jamMatakuliah.add(dataServer.getString("nama_matakuliah"));
-                                            jamJadwal.add(dataServer.getString("jam_mulai"));
-                                        }
-                                        mainActivity.resultGetJadwalForService(jamJadwal, jamMatakuliah);
                                         break;
                                     case "GetDataForService":
                                         FeedService feedService = (FeedService) context;

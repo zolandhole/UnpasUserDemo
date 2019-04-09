@@ -66,17 +66,6 @@ public class PengumumanActivity extends AppCompatActivity implements AdapterView
         list.add("Semua");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout);
         asc_tujuan.setAdapter(dataAdapter);
-//        displayLoading();
-//        ambilDataTujuan();
-    }
-
-    private void ambilDataTujuan() {
-        String typeUser = nomor_induk.substring(0,1);
-        Log.e(TAG, "ambilDataTujuan: type user "+ typeUser);
-        ServerUnpas ambilDataTujuan = new ServerUnpas(PengumumanActivity.this, "ambilDataTujuan");
-        synchronized (PengumumanActivity.this){
-            ambilDataTujuan.getDataTujuan(typeUser);
-        }
     }
 
     private void displayLoading() {

@@ -1,38 +1,21 @@
 package com.example.unpasuserdemo.services;
 
-import android.app.Notification;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.example.unpasuserdemo.JadwalMahasiswaActivity;
-import com.example.unpasuserdemo.MainActivity;
-import com.example.unpasuserdemo.R;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import static android.content.ContentValues.TAG;
-import static com.example.unpasuserdemo.services.App.CHANNEL_ID;
 
 public class GetJadwalService extends Service {
-
-    private NotificationManagerCompat notificationManager;
-    private ArrayList<String> jamJadwal, jamMatakuliah;
-    private long perbedaanJam, perbedaanMenit;
-    private String tipeUser;
 
     @Override
     public void onCreate() {
@@ -42,84 +25,40 @@ public class GetJadwalService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        notificationManager = NotificationManagerCompat.from(this);
-
-        jamJadwal = intent.getStringArrayListExtra("JAMJADWAL");
-        jamMatakuliah = intent.getStringArrayListExtra("JAMMATAKULIAH");
+        ArrayList<String> jamJadwal = intent.getStringArrayListExtra("JAMJADWAL");
+        ArrayList<String> jamMatakuliah = intent.getStringArrayListExtra("JAMMATAKULIAH");
         final String nomor_induk = intent.getStringExtra("NOMOR_INDUK");
-        tipeUser = nomor_induk.substring(0,1);
-        Intent intentNotification;
+        String tipeUser = nomor_induk.substring(0, 1);
 
-        if (tipeUser.equals("9")){
-            intentNotification = new Intent(this, MainActivity.class);
-        } else {
-            intentNotification = new Intent(this, JadwalMahasiswaActivity.class);
-        }
-        intentNotification.putExtra("NOMOR_INDUK", nomor_induk);
-        final PendingIntent pendingIntent = PendingIntent.getActivity(this,0, intentNotification,PendingIntent.FLAG_UPDATE_CURRENT);
+        for (int i = 0; i < jamJadwal.size(); i++) {
+            String jamMulai = jamJadwal.get(i);
+            String matakuliah = jamMatakuliah.get(i);
+            Log.e(TAG, "setAlarm: "+ jamMulai);
+            String[] arr = jamMulai.split(":");
+            int hours = Integer.parseInt(arr[0]);
+            int minutes = Integer.parseInt(arr[1]);
 
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+            Log.e(TAG, "onStartCommand: "+ hours + " " + minutes);
 
-            @Override
-            public void run() {
-                SimpleDateFormat dtf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                Calendar datetimeKalender = Calendar.getInstance();
-                Date date= datetimeKalender.getTime();
-                String datePhone = dtf.format(date);
-
-                for (int i=0; i< jamJadwal.size(); i++){
-                    Log.e(TAG, "resultGetJadwalForService: " + jamJadwal.get(i));
-                    Date jamPhone, jadwal;
-                    String mataKuliah;
-                    try {
-                        jamPhone = dtf.parse(datePhone);
-                        jadwal = dtf.parse(jamJadwal.get(i));
-                        long diff = jadwal.getTime() - jamPhone.getTime();
-                        perbedaanMenit = diff / (60*1000)%60;
-                        perbedaanJam = diff / (60*60*1000)%60;
-                        if (perbedaanJam == 0){
-                            if (perbedaanMenit == 15){
-                                mataKuliah = jamMatakuliah.get(i);
-                                tampilkanNotifikasi(pendingIntent, mataKuliah, tipeUser);
-                            } else {
-                                Log.e(TAG, "resultGetJadwalForService: Jangan Tampilkan Notifikasi, perbedaan = " + perbedaanMenit);
-                            }
-                        } else {
-                            Log.e(TAG, "resultGetJadwalForService: Kadar Luarsa");
-                        }
-                        Log.e(TAG, "run: " + jamPhone + " " + nomor_induk);
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, hours);
+            cal.set(Calendar.MINUTE, minutes);
+            cal.set(Calendar.SECOND,0);
+            cal.set(Calendar.MILLISECOND,0);
+            if (!cal.before(Calendar.getInstance())){
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                Intent intentNotification = new Intent(this,NotificationReceiver.class);
+                intentNotification.putExtra("MATAKULIAH", matakuliah);
+                intentNotification.putExtra("TIPEUSER", tipeUser);
+                intentNotification.putExtra("NOMORINDUK", nomor_induk);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(this,i,intentNotification,0);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),pendingIntent);
+                Log.e(TAG, "setAlarm: Alarm di set ke " + cal.getTimeInMillis());
+            } else {
+                Log.e(TAG, "setAlarm: Jadwal Kuliah sudah lewat="+i);
             }
-
-        }, 0, 1000 * 60);
-        return START_REDELIVER_INTENT;
-    }
-
-    private void tampilkanNotifikasi(PendingIntent pendingIntent, String mataKuliah, String tipeUser) {
-        Log.e(TAG, "tampilkanNotifikasi: " + mataKuliah);
-        String message;
-        if (tipeUser.equals("9")){
-            message = "Mohon persiapan matakuliah " + mataKuliah + " akan dimulai 15 menit lagi";
-        } else {
-            message = "Persiapan matakuliah " + mataKuliah + " akan dimulai 15 menit lagi, jangan sampai telat ya. Absensi sudah bisa dilakukan.";
         }
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Jadwal Kuliah")
-                .setContentText(message)
-                .setSmallIcon(R.drawable.logounpas)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_EVENT)
-                .setColor(Color.GREEN)
-                .setContentIntent(pendingIntent)
-                .setOnlyAlertOnce(true)
-                .build();
-        notificationManager.notify(1, notification);
+        return START_STICKY;
     }
 
     @Override
