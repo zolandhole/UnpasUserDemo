@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -30,6 +32,7 @@ import com.example.unpasuserdemo.services.FeedService;
 import com.example.unpasuserdemo.utils.ServerUnpas;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -107,12 +110,13 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbarBusinness();
+        updateJadwalEveryDay();
         initView();
         initListener();
         onClick();
 
         initRunning();
-        uuid = "35" + //we make this look like a valid IMEI
+        uuid = "35" +
                 Build.BOARD.length()%10+ Build.BRAND.length()%10 +
                 Build.CPU_ABI.length()%10 + Build.DEVICE.length()%10 +
                 Build.DISPLAY.length()%10 + Build.HOST.length()%10 +
@@ -467,5 +471,22 @@ public class MainActivity extends AppCompatActivity{
                 sendUserToPengumumanActivity();
             }
         });
+    }
+
+    private void updateJadwalEveryDay() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE,1);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getBaseContext(), FeedService.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,999, intent, 0);
+        if (calendar.before(Calendar.getInstance())){
+            Log.e(TAG, "setUpdate: Akan dieksekusi besok");
+            calendar.add(Calendar.DATE,1);
+        }
+        alarmManager.setExact(AlarmManager.RTC,calendar.getTimeInMillis(), pendingIntent);
     }
 }

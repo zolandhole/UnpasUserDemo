@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,8 +16,10 @@ import android.view.WindowManager;
 
 import com.example.unpasuserdemo.adapters.AdapterJadwal;
 import com.example.unpasuserdemo.models.ModelJadwal;
+import com.example.unpasuserdemo.services.FeedService;
 import com.example.unpasuserdemo.utils.ServerUnpas;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,15 +37,35 @@ public class JadwalMahasiswaActivity extends AppCompatActivity {
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
-//        initView();
-//        initRunning();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        updateJadwalEveryDay();
         initView();
         initRunning();
+    }
+
+    private void updateJadwalEveryDay() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE,1);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        setUpdate(calendar);
+    }
+
+    private void setUpdate(Calendar calendar) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getBaseContext(), FeedService.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,999, intent, 0);
+        if (calendar.before(Calendar.getInstance())){
+            Log.e(TAG, "setUpdate: Akan dieksekusi besok");
+            calendar.add(Calendar.DATE,1);
+        }
+        alarmManager.setExact(AlarmManager.RTC,calendar.getTimeInMillis(), pendingIntent);
     }
 
     @Override

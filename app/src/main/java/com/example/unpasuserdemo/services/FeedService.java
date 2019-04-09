@@ -28,6 +28,7 @@ public class FeedService extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getNoIndukFromDB();
+
     }
 
     private void getNoIndukFromDB() {
@@ -54,8 +55,8 @@ public class FeedService extends AppCompatActivity {
 
     public void resultGetDataForService(List<String> jamJadwal, List<String> jamMatakuliah) {
         String tipeUser = nomor_induk.substring(0, 1);
-        String jamMulai = "";
-        String matakuliah = "";
+        String jamMulai;
+        String matakuliah;
         for (int i = 0; i < jamJadwal.size(); i++) {
             jamMulai = jamJadwal.get(i);
             matakuliah = jamMatakuliah.get(i);
@@ -83,4 +84,5 @@ public class FeedService extends AppCompatActivity {
             }
         }
     }
+
 }
