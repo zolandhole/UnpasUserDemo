@@ -51,9 +51,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
+                    android:textSize="17sp"
                     android:text="@string/mata_kuliah"/>
 
                 <TextView
+                    android:textColor="@color/bodas"
                     android:layout_alignParentStart="true"
                     android:id="@+id/rpm_dosen"
                     android:layout_width="wrap_content"
@@ -62,12 +64,21 @@
                     android:layout_below="@+id/rpm_matakuliah"/>
 
                 <TextView
+                    android:textColor="@color/bodas"
                     android:id="@+id/rpm_ruangan"
                     android:layout_alignParentStart="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ruang_hukum"
                     android:layout_below="@id/rpm_dosen"/>
+
+                <TextView
+                    android:id="@+id/rpm_durasi"
+                    android:layout_alignParentStart="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/durasi"
+                    android:layout_below="@id/rpm_ruangan"/>
 
                 <TextView
                     android:id="@+id/rpm_jam"

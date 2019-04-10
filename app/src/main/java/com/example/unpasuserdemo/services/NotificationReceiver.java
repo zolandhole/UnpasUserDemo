@@ -5,6 +5,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,7 +28,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         String matakuliah = intent.getStringExtra("MATAKULIAH");
         String typeUser = intent.getStringExtra("TIPEUSER");
         String nomor_induk = intent.getStringExtra("NOMORINDUK");
-        String message;
+        String message, longText;
 
         Log.e(TAG, "onReceive: "+ matakuliah + typeUser + nomor_induk);
         Intent intentNotification;
@@ -33,17 +36,28 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         if (typeUser.equals("9")){
             intentNotification = new Intent(context, MainActivity.class);
-            message = "Mohon persiapan matakuliah " + matakuliah + " akan dimulai 30 menit lagi";
+            message = "Persiapan mengajar " + matakuliah + " akan dimulai 30 menit lagi";
+            longText = "Harap mempersiapkan diri,  kuliah " + matakuliah + " akan dimulai 30 menit lagi, Absensi bisa dilakukan 15 menit sebelum matakuliah dimulai dan toleransi 15 menit setelah matakuliah dimulai, jangan sampai terlambat, selamat Mengajar";
+
         } else {
             intentNotification = new Intent(context, JadwalMahasiswaActivity.class);
-            message = "Persiapan matakuliah " + matakuliah + " akan dimulai 30 menit lagi, jangan sampai telat ya. Absensi sudah bisa dilakukan.";
+            message = "Persiapan belajar " + matakuliah + " akan dimulai 30 menit lagi";
+            longText = "Harap memperispkan diri, kuliah " + matakuliah + " akan dimulai 30 menit lagi, Absensi bisa dilakukan 15 menit sebelum matakuliah dimulai dan toleransi keterlambatan 15 menit setelah matakuliah dimulai, jangan sampat terlambat, selamat Belajar";
         }
         intentNotification.putExtra("NOMOR_INDUK",nomor_induk);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0, intentNotification,PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Bitmap largeIcon = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.logounpas);
+
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle("Jadwal Kuliah")
                 .setContentText(message)
+                .setLargeIcon(largeIcon)
+                .setStyle(new NotificationCompat
+                        .BigTextStyle()
+                        .setBigContentTitle("Persiapan untuk matakuliah " + matakuliah)
+                        .bigText(longText)
+                )
                 .setSmallIcon(R.drawable.ic_unpas_notif)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
