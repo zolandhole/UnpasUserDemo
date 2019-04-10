@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.unpasuserdemo.JadwalMahasiswaActivity;
 import com.example.unpasuserdemo.MainActivity;
