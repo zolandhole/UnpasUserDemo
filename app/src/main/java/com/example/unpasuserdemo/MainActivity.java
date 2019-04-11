@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity{
     private String serverUUID;
     private String matikanBluetooth;
     private BluetoothAdapter bluetoothAdapter;
+    private Dialog noInternetDialog;
 
     private final BroadcastReceiver receiverBTEnable = new BroadcastReceiver() {
         @Override
@@ -194,6 +195,7 @@ public class MainActivity extends AppCompatActivity{
 
     private void initListener() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        noInternetDialog = new Dialog(MainActivity.this);
     }
 
     private void initRunning() {
@@ -475,23 +477,24 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void updateJadwalEveryDay() {
-        String typeUser = nomor_induk.substring(0,1);
-        if (!typeUser.equals("8")){
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE,1);
-            calendar.set(Calendar.SECOND,0);
-            calendar.set(Calendar.MILLISECOND,0);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(getBaseContext(), FeedService.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this,999, intent, 0);
-            if (calendar.before(Calendar.getInstance())){
-                Log.e(TAG, "setUpdate: Akan dieksekusi besok");
-                calendar.add(Calendar.DATE,1);
+        if (nomor_induk != null){
+            String typeUser = nomor_induk.substring(0,1);
+            if (!typeUser.equals("8")){
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE,1);
+                calendar.set(Calendar.SECOND,0);
+                calendar.set(Calendar.MILLISECOND,0);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(getBaseContext(), FeedService.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this,999, intent, 0);
+                if (calendar.before(Calendar.getInstance())){
+                    Log.e(TAG, "setUpdate: Akan dieksekusi besok");
+                    calendar.add(Calendar.DATE,1);
+                }
+                alarmManager.setExact(AlarmManager.RTC,calendar.getTimeInMillis(), pendingIntent);
             }
-            alarmManager.setExact(AlarmManager.RTC,calendar.getTimeInMillis(), pendingIntent);
         }
-
     }
 }

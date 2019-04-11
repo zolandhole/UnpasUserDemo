@@ -207,6 +207,12 @@ public class ServerUnpas {
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.e(TAG, "onResponse: exception"+ e);
+                            switch (aktifitas){
+                                case "Login":
+                                    LoginActivity loginActivity = (LoginActivity) context;
+                                    loginActivity.showDialogNoInternet();
+                                    break;
+                            }
                         }
                     }
                 },
@@ -214,6 +220,12 @@ public class ServerUnpas {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(TAG, "onErrorResponse: "+ error);
+                        switch (aktifitas){
+                            case "Login":
+                                LoginActivity loginActivity = (LoginActivity) context;
+                                loginActivity.showDialogNoInternet();
+                                break;
+                        }
                     }
                 }){
             @Override
