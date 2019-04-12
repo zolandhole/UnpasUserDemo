@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,13 @@ public class PengumumanActivity extends AppCompatActivity implements AdapterView
 
         progressBar = findViewById(R.id.peng_progressBar);
 
+        button_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     private void initListener() {
@@ -57,11 +65,15 @@ public class PengumumanActivity extends AppCompatActivity implements AdapterView
 
     private void initRunning() {
         List<String> list = new ArrayList<>();
+        list.add("Pilih...");
         list.add("Dosen");
         list.add("Mahasiswa");
         list.add("Semua");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, list);
         asc_tujuan.setAdapter(dataAdapter);
+        ll_dosen.setVisibility(View.GONE);
+        ll_mahasiswa.setVisibility(View.GONE);
+        button_next.setVisibility(View.GONE);
     }
 
     private void displayLoading() {
@@ -71,9 +83,11 @@ public class PengumumanActivity extends AppCompatActivity implements AdapterView
         ll_mahasiswa.setVisibility(View.GONE);
     }
 
+
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+        Toast.makeText(this, "TEST", Toast.LENGTH_SHORT).show();
     }
 
     @Override

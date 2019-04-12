@@ -10,6 +10,7 @@
     tools:context=".PengumumanActivity">
 
     <ProgressBar
+        android:visibility="gone"
         android:layout_centerInParent="true"
         android:id="@+id/peng_progressBar"
         style="?android:attr/progressBarStyle"
@@ -54,6 +55,7 @@
             android:textColor="@color/hejotaikuda" />
 
         <androidx.appcompat.widget.AppCompatSpinner
+            android:background="@color/bodas"
             android:spinnerMode="dropdown"
             android:entries="@array/tujuan_arrays"
             android:prompt="@string/arrayTujuan"
