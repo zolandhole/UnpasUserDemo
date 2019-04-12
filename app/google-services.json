@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "544042671707",
+    "firebase_url": "https://unpasuserdemo.firebaseio.com",
+    "project_id": "unpasuserdemo",
+    "storage_bucket": "unpasuserdemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544042671707:android:ec115db66938a520",
+        "android_client_info": {
+          "package_name": "com.notio.unpasuserdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544042671707-5bk87fjrao8iujvhits8ak8qs0d7nh22.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.notio.unpasuserdemo",
+            "certificate_hash": "6da3e7681b7c8e1a5d46af0e15daff0ee8692c4b"
+          }
+        },
+        {
+          "client_id": "544042671707-op0a5tba75jforcdtphtkgh6nt0fbffo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtGR_kofhYI95UBqafQXWp9E4uaDVZsaI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544042671707-op0a5tba75jforcdtphtkgh6nt0fbffo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
