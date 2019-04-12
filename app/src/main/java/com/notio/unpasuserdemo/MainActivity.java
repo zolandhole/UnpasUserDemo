@@ -26,6 +26,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.notio.unpasuserdemo.handlers.DBHandler;
 import com.notio.unpasuserdemo.models.ModelUser;
 import com.notio.unpasuserdemo.services.FeedService;
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity{
     private String uuid;
     private String serverUUID;
     private String matikanBluetooth;
+    private String token;
     private BluetoothAdapter bluetoothAdapter;
 
     @Override
@@ -65,9 +70,6 @@ public class MainActivity extends AppCompatActivity{
         toolbarBusinness();
         initView();
         initListener();
-        onClick();
-
-        initRunning();
 
         uuid = "35" +
                 Build.BOARD.length()%10+ Build.BRAND.length()%10 +
@@ -77,6 +79,19 @@ public class MainActivity extends AppCompatActivity{
                 Build.MODEL.length()%10 + Build.PRODUCT.length()%10 +
                 Build.TAGS.length()%10 + Build.TYPE.length()%10 +
                 Build.USER.length()%10 ; //13 digits
+
+        FirebaseApp.initializeApp(this);
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                token = instanceIdResult.getToken();
+                Log.e(TAG, "onSuccess: " + token);
+            }
+        });
+
+        onClick();
+        initRunning();
+
     }
 
     @Override
@@ -131,14 +146,11 @@ public class MainActivity extends AppCompatActivity{
     private void initView() {
         textViewNama = findViewById(R.id.main_nama);
         textViewJurusan = findViewById(R.id.main_jurusan);
-
         cardViewForum = findViewById(R.id.main_cv_forum);
         cardViewAbsen = findViewById(R.id.main_cv_absen);
         cardViewJadwal = findViewById(R.id.main_cv_jadwal);
         cardViewLapAbsen = findViewById(R.id.main_cv_lap_absen);
-
         linearLayoutMenu = findViewById(R.id.main_linar_menu);
-
         main_rl_tambah = findViewById(R.id.main_rl_tambah);
 
         progressDialog = new ProgressDialog(this);
@@ -152,7 +164,6 @@ public class MainActivity extends AppCompatActivity{
     private void initRunning() {
         displayLoading();
         getUserFromDB();
-        updateJadwalEveryDay();
     }
 
     private void getUserFromDB() {
@@ -305,8 +316,16 @@ public class MainActivity extends AppCompatActivity{
     private void setObjectDisplay() {
         textViewNama.setText(nama);
         textViewJurusan.setText(nama_jurusan);
+        saveToken();
         userType();
         displaySuccess();
+    }
+
+    private void saveToken() {
+        ServerUnpas serverUnpas = new ServerUnpas(MainActivity.this, "saveToken");
+        synchronized (MainActivity.this){
+            serverUnpas.saveToken(token, nomor_induk);
+        }
     }
 
     public void sendUserToLoginActivity() {
@@ -471,28 +490,6 @@ public class MainActivity extends AppCompatActivity{
         if (bluetoothAdapter.isEnabled()){
             matikanBluetooth = "tidak";
             sendUserToQRActivity();
-        }
-    }
-
-    private void updateJadwalEveryDay() {
-        if (nomor_induk != null){
-            String typeUser = nomor_induk.substring(0,1);
-            if (!typeUser.equals("8")){
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                calendar.set(Calendar.MINUTE,1);
-                calendar.set(Calendar.SECOND,0);
-                calendar.set(Calendar.MILLISECOND,0);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(getBaseContext(), FeedService.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                PendingIntent pendingIntent = PendingIntent.getActivity(this,999, intent, 0);
-                if (calendar.before(Calendar.getInstance())){
-                    Log.e(TAG, "setUpdate: Akan dieksekusi besok");
-                    calendar.add(Calendar.DATE,1);
-                }
-                alarmManager.setExact(AlarmManager.RTC,calendar.getTimeInMillis(), pendingIntent);
-            }
         }
     }
 }
