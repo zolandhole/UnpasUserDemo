@@ -76,11 +76,11 @@ class MyNotificationManager {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         Notification notification;
         notification = builder
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_unpas_notif)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.mipmap.ic_launcher))
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.ic_unpas_notif))
                 .setContentText(message)
                 .build();
 

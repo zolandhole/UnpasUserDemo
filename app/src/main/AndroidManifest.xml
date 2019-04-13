@@ -33,6 +33,7 @@
             android:configChanges="orientation|screenSize" />
         <activity android:name=".JadwalMahasiswaActivity" />
         <activity
+            android:configChanges="orientation|screenSize"
             android:name=".PengumumanActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity

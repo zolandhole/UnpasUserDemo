@@ -57,6 +57,7 @@
     <string name="kesalahan">Kesalahan</string>
     <string name="ulangi">Ulangi</string>
     <string name="server_problem">atau tidak ada respon dari server</string>
+    <string name="kirim">Kirim</string>
     <string-array name="tujuan_arrays">
         <item>Dosen</item>
         <item>Mahasiswa</item>

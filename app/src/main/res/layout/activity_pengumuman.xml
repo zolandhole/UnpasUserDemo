@@ -38,79 +38,120 @@
         android:background="@color/bodas"
         android:layout_width="match_parent"
         android:layout_height="2dp" />
-    
-    <LinearLayout
-        android:id="@+id/peng_ll_tujuan"
-        android:layout_marginTop="8dp"
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/relativeTujuan"
         android:layout_below="@+id/peng_line"
-        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/peng_ll_tujuan"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/pengumunan_ditujukan_ke"
+                android:textColor="@color/hejotaikuda" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:background="@color/bodas"
+                android:spinnerMode="dropdown"
+                android:entries="@array/tujuan_arrays"
+                android:prompt="@string/arrayTujuan"
+                android:id="@+id/peng_acs_tujuan"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/peng_ll_dosen"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/peng_ll_tujuan"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/dosen_matakuliah"
+                android:textColor="@color/hejotaikuda" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:background="@color/bodas"
+                android:id="@+id/peng_acs_dosen"
+                android:spinnerMode="dropdown"
+                android:entries="@array/tujuan_arrays"
+                android:prompt="@string/arrayTujuan"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/peng_ll_mahasiswa"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/peng_ll_dosen"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/mahasiswa_jurusan"
+                android:textColor="@color/hejotaikuda" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:background="@color/bodas"
+                android:spinnerMode="dropdown"
+                android:entries="@array/tujuan_arrays"
+                android:prompt="@string/arrayTujuan"
+                android:id="@+id/peng_acs_mahasiswa"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:visibility="gone"
+        android:layout_below="@+id/peng_line"
+        android:id="@+id/relativePesan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/textViewTujuan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:text="@string/pengumunan_ditujukan_ke"
             android:textColor="@color/hejotaikuda" />
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:background="@color/bodas"
-            android:spinnerMode="dropdown"
-            android:entries="@array/tujuan_arrays"
-            android:prompt="@string/arrayTujuan"
-            android:id="@+id/peng_acs_tujuan"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edittextPesan"
+            android:maxHeight="150dp"
+            android:inputType="textMultiLine"
+            android:textColor="@color/bodas"
+            android:layout_below="@+id/textViewTujuan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </RelativeLayout>
+    
 
-    <LinearLayout
-        android:id="@+id/peng_ll_dosen"
-        android:layout_marginTop="8dp"
-        android:layout_below="@+id/peng_ll_tujuan"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/dosen_matakuliah"
-            android:textColor="@color/hejotaikuda" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/peng_acs_dosen"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/peng_ll_mahasiswa"
-        android:layout_marginTop="8dp"
-        android:layout_below="@+id/peng_ll_dosen"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/mahasiswa_jurusan"
-            android:textColor="@color/hejotaikuda" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/peng_acs_mahasiswa"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_marginBottom="20dp"
@@ -132,6 +173,7 @@
             android:layout_height="wrap_content" />
 
         <Button
+            android:visibility="gone"
             style="@null"
             android:layout_margin="10dp"
             android:layout_weight="1"
@@ -139,6 +181,18 @@
             android:layout_marginTop="20dp"
             android:textColor="@color/hideung"
             android:text="@string/lanjutkan"
+            android:background="@drawable/button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:visibility="gone"
+            style="@null"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:id="@+id/peng_button_finish"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/hideung"
+            android:text="@string/kirim"
             android:background="@drawable/button"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />

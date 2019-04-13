@@ -14,6 +14,7 @@ import com.notio.unpasuserdemo.InputMacActivity;
 import com.notio.unpasuserdemo.JadwalMahasiswaActivity;
 import com.notio.unpasuserdemo.LoginActivity;
 import com.notio.unpasuserdemo.MainActivity;
+import com.notio.unpasuserdemo.PengumumanActivity;
 import com.notio.unpasuserdemo.models.ModelJadwal;
 import com.notio.unpasuserdemo.models.ModelUser;
 import com.notio.unpasuserdemo.services.FeedService;
@@ -39,6 +40,22 @@ public class ServerUnpas {
     public ServerUnpas(Context context, String aktifitas){
         this.context = context;
         this.aktifitas = aktifitas;
+    }
+
+    private String UrlAddress(){
+        String Url="";
+        switch (aktifitas){
+            case "getIdFakultas":
+                Url = ServerSide.POST_GET_IDFAKULTAS;
+                break;
+            case "getMatakuliah":
+                Url = ServerSide.POST_GET_MATAKULIAH;
+                break;
+            case "sendMessageToServer":
+                Url = ServerSide.POST_PESAN_PENGUMUMAN;
+                break;
+        }
+        return Url;
     }
 
     public void sendMacAddress (final String id_user, final String nomor_induk, final String mac_user){
@@ -378,6 +395,150 @@ public class ServerUnpas {
                 Map<String,String> params = new HashMap<>();
                 params.put("token", token);
                 params.put("nomor_induk", nomor_induk);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+
+    public void sendSingleString(final String nomor_induk) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                UrlAddress(),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.optString("error").equals("true")){
+                                String message = jsonObject.getString("message");
+                                Log.e(TAG, "onResponse: " + message);
+                            } else {
+                                switch (aktifitas){
+                                    case "getIdFakultas":
+                                        PengumumanActivity pengumumanActivity = (PengumumanActivity) context;
+                                        JSONArray jsonArray = jsonObject.getJSONArray("message");
+                                        String IDFAKULTAS="", NAMAFAKULTAS="";
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            JSONObject dataServer = jsonArray.getJSONObject(i);
+                                            IDFAKULTAS = dataServer.getString("id");
+                                            NAMAFAKULTAS = dataServer.getString("nama_fakultas");
+                                        }
+                                        pengumumanActivity.resultGetIdFakultas(IDFAKULTAS,NAMAFAKULTAS);
+                                        break;
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "onResponse: EXCEPTION="+e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "onErrorResponse: ERROR=" + error);
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("nomor_induk", nomor_induk);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+
+    public void sendDuaString(final String nomor_induk, final String idfakultas) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                UrlAddress(),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.optString("error").equals("true")){
+                                String message = jsonObject.getString("message");
+                                Log.e(TAG, "onResponse: " + message);
+                            } else {
+                                switch (aktifitas){
+                                    case "getMatakuliah":
+                                        PengumumanActivity pengumumanActivity = (PengumumanActivity) context;
+                                        JSONArray jsonArray = jsonObject.getJSONArray("message");
+                                        pengumumanActivity.resultGetMahasiswa(jsonArray);
+                                        break;
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "onResponse: EXCEPTION="+e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "onErrorResponse: ERROR=" + error);
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("nomor_induk", nomor_induk);
+                params.put("id_fakultas", idfakultas);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+
+    public void sendEnamString(final String nomor_induk,final String nama, final String idFakultas, final String idmatakuliah, final String idJurusan, final String pesan) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                UrlAddress(),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.optString("error").equals("true")){
+                                String message = jsonObject.getString("message");
+                                Log.e(TAG, "onResponse: " + message);
+                            } else {
+                                switch (aktifitas){
+                                    case "sendMessageToServer":
+                                        PengumumanActivity pengumumanActivity = (PengumumanActivity) context;
+                                        String message = jsonObject.getString("message");
+                                        pengumumanActivity.resultSendMessageToServer(message);
+                                        break;
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "onResponse: EXCEPTION="+e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "onErrorResponse: ERROR=" + error);
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("nomor_induk", nomor_induk);
+                params.put("nama_pengirim", nama);
+                params.put("id_fakultas", idFakultas);
+                params.put("id_matakuliah", idmatakuliah);
+                params.put("id_jurusan", idJurusan);
+                params.put("pesan", pesan);
                 return params;
             }
         };

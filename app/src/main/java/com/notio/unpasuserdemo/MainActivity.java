@@ -354,6 +354,7 @@ public class MainActivity extends AppCompatActivity{
     private void sendUserToPengumumanActivity() {
         Intent intentPengumuman = new Intent(MainActivity.this, PengumumanActivity.class);
         intentPengumuman.putExtra("NOMOR_INDUK", nomor_induk);
+        intentPengumuman.putExtra("NAMA", nama);
         startActivity(intentPengumuman);
     }
 
