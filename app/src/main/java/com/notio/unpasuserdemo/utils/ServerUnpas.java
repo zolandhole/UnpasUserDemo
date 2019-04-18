@@ -16,6 +16,7 @@ import com.notio.unpasuserdemo.LoginActivity;
 import com.notio.unpasuserdemo.MainActivity;
 import com.notio.unpasuserdemo.PengumumanActivity;
 import com.notio.unpasuserdemo.models.ModelJadwal;
+import com.notio.unpasuserdemo.models.ModelPengumuman;
 import com.notio.unpasuserdemo.models.ModelUser;
 import com.notio.unpasuserdemo.services.FeedService;
 
@@ -35,6 +36,7 @@ public class ServerUnpas {
     private Context context;
     private String aktifitas, status;
     private List<ModelJadwal> listJadwal;
+    private List<ModelPengumuman> listPengumumans;
     private List<String> jamJadwal, jamMatakuliah;
 
     public ServerUnpas(Context context, String aktifitas){
@@ -53,6 +55,9 @@ public class ServerUnpas {
                 break;
             case "sendMessageToServer":
                 Url = ServerSide.POST_PESAN_PENGUMUMAN;
+                break;
+            case "getPengumuman":
+                Url = ServerSide.POST_GET_PENGUMUMAN;
                 break;
         }
         return Url;
@@ -425,6 +430,21 @@ public class ServerUnpas {
                                             NAMAFAKULTAS = dataServer.getString("nama_fakultas");
                                         }
                                         pengumumanActivity.resultGetIdFakultas(IDFAKULTAS,NAMAFAKULTAS);
+                                        break;
+                                    case "getPengumuman":
+                                        MainActivity mainActivity = (MainActivity) context;
+                                        JSONArray jsonMssage = jsonObject.getJSONArray("message");
+                                        listPengumumans = new ArrayList<>();
+                                        for (int i = 0; i < jsonMssage.length(); i++) {
+                                            JSONObject dataServer = jsonMssage.getJSONObject(i);
+                                            ModelPengumuman modelPengumuman = new ModelPengumuman();
+                                            modelPengumuman.setTITLE(dataServer.getString("pengirim"));
+                                            modelPengumuman.setPESAN(dataServer.getString("pesan"));
+                                            modelPengumuman.setUPLOAD_DATE(dataServer.getString("upload_date"));
+                                            listPengumumans.add(modelPengumuman);
+                                            Log.e(TAG, "onResponse: " + dataServer.getString("pesan"));
+                                        }
+                                        mainActivity.resultGetPengumuman(listPengumumans);
                                         break;
                                 }
                             }

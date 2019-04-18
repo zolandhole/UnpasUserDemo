@@ -250,13 +250,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="180dp">
-                <TextView
-                    android:id="@+id/main_content_pengumuman"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerviewPengumuman"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:textColor="@color/bodas"
-                    android:text="@string/content_pengumuman"/>
+                    android:layout_height="wrap_content" />
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

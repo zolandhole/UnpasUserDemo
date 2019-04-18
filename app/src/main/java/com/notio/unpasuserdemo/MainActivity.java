@@ -3,10 +3,10 @@ package com.notio.unpasuserdemo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -30,14 +30,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.notio.unpasuserdemo.adapters.AdapterPengumuman;
 import com.notio.unpasuserdemo.handlers.DBHandler;
+import com.notio.unpasuserdemo.models.ModelPengumuman;
 import com.notio.unpasuserdemo.models.ModelUser;
 import com.notio.unpasuserdemo.services.FeedService;
 import com.notio.unpasuserdemo.utils.ServerUnpas;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity{
     private String matikanBluetooth;
     private String token;
     private BluetoothAdapter bluetoothAdapter;
+    private RecyclerView recyclerViewPengumuman;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +102,22 @@ public class MainActivity extends AppCompatActivity{
         super.onStart();
         Intent intent = new Intent(MainActivity.this, FeedService.class);
         startActivity(intent);
+        getPengumuman();
+    }
+
+    private void getPengumuman() {
+        ServerUnpas serverUnpas = new ServerUnpas(MainActivity.this, "getPengumuman");
+        synchronized (MainActivity.this) {
+            serverUnpas.sendSingleString(nomor_induk);
+        }
+    }
+
+    public void resultGetPengumuman(List<ModelPengumuman> listPengumuman) {
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerViewPengumuman.setLayoutManager(manager);
+        recyclerViewPengumuman.setHasFixedSize(true);
+        RecyclerView.Adapter adapterPengumuman = new AdapterPengumuman(listPengumuman);
+        recyclerViewPengumuman.setAdapter(adapterPengumuman);
     }
 
     @Override
@@ -155,6 +174,8 @@ public class MainActivity extends AppCompatActivity{
 
         progressDialog = new ProgressDialog(this);
         dbHandler = new DBHandler(this);
+
+        recyclerViewPengumuman = findViewById(R.id.recyclerviewPengumuman);
     }
 
     private void initListener() {
