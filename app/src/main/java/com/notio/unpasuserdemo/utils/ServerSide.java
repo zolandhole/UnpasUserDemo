@@ -1,6 +1,8 @@
 package com.notio.unpasuserdemo.utils;
 
 class ServerSide {
+    static final String POST_GET_MATAKULIAH_JURUSAN = "http://122.248.39.157/unpas/pengumuman/get_matakuliah_jurusan";
+    static final String POST_GET_JURUSAN_PENGUMUMAN = "http://122.248.39.157/unpas/pengumuman/get_jurusan";
     static final String POST_GET_PENGUMUMAN = "http://122.248.39.157/unpas/pengumuman/get_pengumuman_for_main";
     static final String POST_PESAN_PENGUMUMAN = "http://122.248.39.157/unpas/pengumuman/post_pesan_pengumuman";
     static final String POST_GET_MATAKULIAH = "http://122.248.39.157/unpas/pengumuman/get_matakuliah";

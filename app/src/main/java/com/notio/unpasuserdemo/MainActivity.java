@@ -112,6 +112,11 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public void recreate() {
+        super.recreate();
+    }
+
     public void resultGetPengumuman(List<ModelPengumuman> listPengumuman) {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerViewPengumuman.setLayoutManager(manager);

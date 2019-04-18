@@ -42,8 +42,9 @@ public class PengumumanActivity extends AppCompatActivity {
     private String IDMATAKULIAH;
     private String IDJURUSAN;
     private String KEPADA;
+    private String NAMAFAKULTAS;
     private static final String TAG = "PengumumanActivity";
-    private JSONArray jsonArrayMatakuliah;
+    private JSONArray jsonArrayMatakuliah, jsonArrayJurusan;
     private RelativeLayout relativeLayoutTujuan, relativeLayoutPesan;
     private TextView textViewTujuan;
     private EditText edittextPes;
@@ -101,7 +102,17 @@ public class PengumumanActivity extends AppCompatActivity {
             public void onClick(View v) {
                 relativeLayoutTujuan.setVisibility(View.GONE);
                 relativeLayoutPesan.setVisibility(View.VISIBLE);
-                textViewTujuan.setText("Kepada Dosen " + KEPADA);
+                if (!IDMATAKULIAH.equals("999") && IDJURUSAN.equals("999")){
+                    if (IDMATAKULIAH.equals("0")){
+                        textViewTujuan.setText("Kepada " + KEPADA + " pengampu matakuliah di Fakultas " + NAMAFAKULTAS);
+                    } else {
+                        textViewTujuan.setText("Kepada Dosen " + KEPADA);
+                    }
+                } else if (IDMATAKULIAH.equals("999") && !IDJURUSAN.equals("999")){
+                    textViewTujuan.setText("Kepada Mahasiswa " + KEPADA + " Fakultas " + NAMAFAKULTAS);
+                } else if (IDMATAKULIAH.equals("0") && IDJURUSAN.equals("0")){
+                    textViewTujuan.setText("Kepada Seluruh Member Fakultas " + NAMAFAKULTAS);
+                }
                 button_next.setVisibility(View.GONE);
                 button_back.setText("Ubah Tujuan");
                 edittextPes.requestFocus();
@@ -179,11 +190,15 @@ public class PengumumanActivity extends AppCompatActivity {
                         ll_mahasiswa.setVisibility(View.VISIBLE);
                         ll_dosen.setVisibility(View.GONE);
                         button_next.setVisibility(View.GONE);
+                        getJurusan();
                         break;
                     case "Semua":
                         ll_dosen.setVisibility(View.GONE);
                         ll_mahasiswa.setVisibility(View.GONE);
                         button_next.setVisibility(View.VISIBLE);
+                        IDMATAKULIAH = "0";
+                        IDJURUSAN = "0";
+                        getMatakuliahgetJurusan();
                         break;
                 }
             }
@@ -195,6 +210,17 @@ public class PengumumanActivity extends AppCompatActivity {
         });
     }
 
+    private void getMatakuliahgetJurusan() {
+        ServerUnpas serverUnpas = new ServerUnpas(PengumumanActivity.this, "getMatakuliahgetJurusan");
+        synchronized (PengumumanActivity.this){
+            serverUnpas.sendDuaString(nomor_induk, IDFAKULTAS);
+        }
+    }
+
+    public void resultgetMatakuliahgetJurusan(JSONArray jsonArrayMJ) {
+
+    }
+
     private void getIdFakultas() {
         ServerUnpas serverUnpas = new ServerUnpas(PengumumanActivity.this, "getIdFakultas");
         synchronized (PengumumanActivity.this){
@@ -202,8 +228,17 @@ public class PengumumanActivity extends AppCompatActivity {
         }
     }
 
+    private void getJurusan() {
+        progressBar.setVisibility(View.VISIBLE);
+        ServerUnpas serverUnpas = new ServerUnpas(PengumumanActivity.this, "getJurusan");
+        synchronized (PengumumanActivity.this){
+            serverUnpas.sendDuaString(nomor_induk, IDFAKULTAS);
+        }
+    }
+
     public void resultGetIdFakultas(String idfakultas, String namafakultas) {
         IDFAKULTAS = idfakultas;
+        NAMAFAKULTAS = namafakultas;
         Log.e(TAG, "resultGetIdFakultas: " + IDFAKULTAS + namafakultas);
     }
 
@@ -264,6 +299,55 @@ public class PengumumanActivity extends AppCompatActivity {
         });
     }
 
+    public void resultGetJurusan(JSONArray jsonArrayJurusanServer) {
+        jsonArrayJurusan = jsonArrayJurusanServer;
+        List<String> list = new ArrayList<>();
+        list.add("Pilih Jurusan Mahasiswa");
+        for (int i = 0; i < jsonArrayJurusan.length(); i++) {
+            try {
+                JSONObject dataServer = jsonArrayJurusan.getJSONObject(i);
+                list.add(dataServer.getString("nama_jurusan"));
+                list.removeAll(Collections.singletonList(""));
+                list.removeAll(Collections.singletonList("null"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e(TAG, "resultGetJurusan: " + e);
+            }
+        }
+        list.add("Semua Jurusan");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, list);
+        asc_mahasiswa.setAdapter(dataAdapter);
+        ll_mahasiswa.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+        asc_mahasiswa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                KEPADA = asc_mahasiswa.getSelectedItem().toString();
+                Log.e(TAG, "onItemSelected: " + KEPADA );
+                switch (KEPADA){
+                    case "Pilih Jurusan Mahasiswa":
+                        button_next.setVisibility(View.GONE);
+                        break;
+                    case "Semua Jurusan":
+                        button_next.setVisibility(View.VISIBLE);
+                        IDMATAKULIAH = "999";
+                        IDJURUSAN = "0";
+                        break;
+                        default:
+                            button_next.setVisibility(View.VISIBLE);
+                            IDMATAKULIAH = "999";
+                            IDJURUSAN = getIdJurusan(position);
+                            break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
     private String getIdMatakuliah(int position) {
         String IDMATAKULIAH="";
         try {
@@ -273,6 +357,17 @@ public class PengumumanActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return IDMATAKULIAH;
+    }
+
+    private String getIdJurusan(int position) {
+        String IDJURUSAN="";
+        try {
+            JSONObject jsonObject = jsonArrayJurusan.getJSONObject(position-1);
+            IDJURUSAN = jsonObject.getString("id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return IDJURUSAN;
     }
 
     public void resultSendMessageToServer(String message) {

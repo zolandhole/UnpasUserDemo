@@ -59,6 +59,11 @@ public class ServerUnpas {
             case "getPengumuman":
                 Url = ServerSide.POST_GET_PENGUMUMAN;
                 break;
+            case "getJurusan":
+                Url = ServerSide.POST_GET_JURUSAN_PENGUMUMAN;
+                break;
+            case "getMatakuliahgetJurusan":
+                Url = ServerSide.POST_GET_MATAKULIAH_JURUSAN;
         }
         return Url;
     }
@@ -490,6 +495,16 @@ public class ServerUnpas {
                                         JSONArray jsonArray = jsonObject.getJSONArray("message");
                                         pengumumanActivity.resultGetMahasiswa(jsonArray);
                                         break;
+                                    case "getJurusan":
+                                        PengumumanActivity pengumumanActivityJurusan = (PengumumanActivity) context;
+                                        JSONArray jsonArrayJurusan = jsonObject.getJSONArray("message");
+                                        pengumumanActivityJurusan.resultGetJurusan(jsonArrayJurusan);
+                                        break;
+                                    case "getMatakuliahgetJurusan":
+                                        PengumumanActivity pengumumanActivityMJ = (PengumumanActivity) context;
+                                        JSONArray jsonArrayMJ = jsonObject.getJSONArray("message");
+                                        pengumumanActivityMJ.resultgetMatakuliahgetJurusan(jsonArrayMJ);
+                                        break;
                                 }
                             }
 
@@ -518,6 +533,7 @@ public class ServerUnpas {
     }
 
     public void sendEnamString(final String nomor_induk,final String nama, final String idFakultas, final String idmatakuliah, final String idJurusan, final String pesan) {
+        Log.e(TAG, "sendEnamString: " + nomor_induk + " " + nama + " " + idFakultas + " " + idmatakuliah + " "  + idJurusan + " " + pesan);
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 UrlAddress(),
                 new Response.Listener<String>() {
@@ -526,6 +542,13 @@ public class ServerUnpas {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.optString("error").equals("true")){
+                                switch (aktifitas){
+                                    case "sendMessageToServer":
+                                        PengumumanActivity pengumumanActivity = (PengumumanActivity) context;
+                                        String message = jsonObject.getString("message");
+                                        pengumumanActivity.resultSendMessageToServer(message);
+                                        break;
+                                }
                                 String message = jsonObject.getString("message");
                                 Log.e(TAG, "onResponse: " + message);
                             } else {
