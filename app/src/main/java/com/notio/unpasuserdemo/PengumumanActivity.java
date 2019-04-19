@@ -44,7 +44,7 @@ public class PengumumanActivity extends AppCompatActivity {
     private String KEPADA;
     private String NAMAFAKULTAS;
     private static final String TAG = "PengumumanActivity";
-    private JSONArray jsonArrayMatakuliah, jsonArrayJurusan, jsonArrayMJ;
+    private JSONArray jsonArrayMatakuliah, jsonArrayJurusan;
     private RelativeLayout relativeLayoutTujuan, relativeLayoutPesan;
     private TextView textViewTujuan;
     private EditText edittextPes;
@@ -334,11 +334,6 @@ public class PengumumanActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    public void resultgetMatakuliahgetJurusan(JSONArray jsonArrayMJServer) {
-        jsonArrayMJ = jsonArrayMJServer;
-
     }
 
     private String getIdMatakuliah(int position) {
