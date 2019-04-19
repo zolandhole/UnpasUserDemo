@@ -157,10 +157,10 @@ public class PengumumanActivity extends AppCompatActivity {
 
     private void initRunning() {
         String TYPEUSER = nomor_induk.substring(0,1);
+        relativeLayoutPesan.setVisibility(View.GONE);
+        relativeLayoutTujuan.setVisibility(View.VISIBLE);
         if (TYPEUSER.equals("8")){
             getIdFakultas();
-            relativeLayoutPesan.setVisibility(View.GONE);
-            relativeLayoutTujuan.setVisibility(View.VISIBLE);
             List<String> list = new ArrayList<>();
             list.add("Pilih...");
             list.add("Dosen");
@@ -169,7 +169,8 @@ public class PengumumanActivity extends AppCompatActivity {
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, list);
             asc_tujuan.setAdapter(dataAdapter);
         } else if (TYPEUSER.equals("9")){
-            Toast.makeText(this, "TESTING DOSEN", Toast.LENGTH_SHORT).show();
+            getIdFakultas();
+            getJurusan();
         }
         asc_tujuan.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

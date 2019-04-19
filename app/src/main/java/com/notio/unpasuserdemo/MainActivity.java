@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity{
         } catch (Exception ignored){
 
         }
+        dbHandler.close();
     }
 
     @Override

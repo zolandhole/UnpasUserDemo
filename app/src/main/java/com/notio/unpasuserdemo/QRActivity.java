@@ -248,7 +248,6 @@ public class QRActivity extends AppCompatActivity {
         CountDownTimer countDownTimer = new CountDownTimer(10000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-
             }
 
             @Override
@@ -265,15 +264,11 @@ public class QRActivity extends AppCompatActivity {
         CountDownTimer countDownTimer = new CountDownTimer(11000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                if (millisUntilFinished / 1000 == 0) {
-                    generateQR();
-                } else {
-                    qr_generate.setText(String.valueOf(millisUntilFinished / 1000));
-                }
+                qr_generate.setText(String.valueOf(millisUntilFinished / 1000));
             }
             @Override
             public void onFinish() {
-
+                generateQR();
             }
         };
         countDownTimer.start();
