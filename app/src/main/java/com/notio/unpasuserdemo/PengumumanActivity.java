@@ -156,19 +156,20 @@ public class PengumumanActivity extends AppCompatActivity {
     }
 
     private void initRunning() {
-        relativeLayoutPesan.setVisibility(View.GONE);
-        relativeLayoutTujuan.setVisibility(View.VISIBLE);
-        List<String> list = new ArrayList<>();
-        list.add("Pilih...");
-        list.add("Dosen");
-        list.add("Mahasiswa");
-        list.add("Semua");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, list);
-        asc_tujuan.setAdapter(dataAdapter);
-
         String TYPEUSER = nomor_induk.substring(0,1);
         if (TYPEUSER.equals("8")){
             getIdFakultas();
+            relativeLayoutPesan.setVisibility(View.GONE);
+            relativeLayoutTujuan.setVisibility(View.VISIBLE);
+            List<String> list = new ArrayList<>();
+            list.add("Pilih...");
+            list.add("Dosen");
+            list.add("Mahasiswa");
+            list.add("Semua");
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, list);
+            asc_tujuan.setAdapter(dataAdapter);
+        } else if (TYPEUSER.equals("9")){
+            Toast.makeText(this, "TESTING DOSEN", Toast.LENGTH_SHORT).show();
         }
         asc_tujuan.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

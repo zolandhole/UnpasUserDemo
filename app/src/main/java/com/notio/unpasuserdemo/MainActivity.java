@@ -395,6 +395,7 @@ public class MainActivity extends AppCompatActivity{
         cardViewAbsen.setVisibility(View.VISIBLE);
         cardViewJadwal.setVisibility(View.VISIBLE);
         cardViewLapAbsen.setVisibility(View.GONE);
+        main_rl_tambah.setVisibility(View.GONE);
     }
 
     private void menuDosen(){

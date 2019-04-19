@@ -35,13 +35,13 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         if (typeUser.equals("9")){
             intentNotification = new Intent(context, MainActivity.class);
-            message = "Persiapan mengajar " + matakuliah + " akan dimulai 30 menit lagi";
-            longText = "Harap mempersiapkan diri,  kuliah " + matakuliah + " akan dimulai 30 menit lagi, Absensi bisa dilakukan 15 menit sebelum matakuliah dimulai dan toleransi 15 menit setelah matakuliah dimulai, jangan sampai terlambat, selamat Mengajar";
+            message = R.string.notif + matakuliah + R.string.notif2;
+            longText = R.string.notif3 + matakuliah + R.string.notif4;
 
         } else {
             intentNotification = new Intent(context, JadwalMahasiswaActivity.class);
-            message = "Persiapan belajar " + matakuliah + " akan dimulai 30 menit lagi";
-            longText = "Harap memperispkan diri, kuliah " + matakuliah + " akan dimulai 30 menit lagi, Absensi bisa dilakukan 15 menit sebelum matakuliah dimulai dan toleransi keterlambatan 15 menit setelah matakuliah dimulai, jangan sampat terlambat, selamat Belajar";
+            message = R.string.notif5 + matakuliah + R.string.notif6;
+            longText = R.string.notif7 + matakuliah + R.string.notif8;
         }
         intentNotification.putExtra("NOMOR_INDUK",nomor_induk);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0, intentNotification,PendingIntent.FLAG_UPDATE_CURRENT);
