@@ -44,7 +44,7 @@ public class PengumumanActivity extends AppCompatActivity {
     private String KEPADA;
     private String NAMAFAKULTAS;
     private static final String TAG = "PengumumanActivity";
-    private JSONArray jsonArrayMatakuliah, jsonArrayJurusan;
+    private JSONArray jsonArrayMatakuliah, jsonArrayJurusan, jsonArrayMJ;
     private RelativeLayout relativeLayoutTujuan, relativeLayoutPesan;
     private TextView textViewTujuan;
     private EditText edittextPes;
@@ -103,14 +103,14 @@ public class PengumumanActivity extends AppCompatActivity {
                 relativeLayoutTujuan.setVisibility(View.GONE);
                 relativeLayoutPesan.setVisibility(View.VISIBLE);
                 if (!IDMATAKULIAH.equals("999") && IDJURUSAN.equals("999")){
-                    if (IDMATAKULIAH.equals("0")){
+                    if (IDMATAKULIAH.equals("0" + IDFAKULTAS)){
                         textViewTujuan.setText("Kepada " + KEPADA + " pengampu matakuliah di Fakultas " + NAMAFAKULTAS);
                     } else {
                         textViewTujuan.setText("Kepada Dosen " + KEPADA);
                     }
                 } else if (IDMATAKULIAH.equals("999") && !IDJURUSAN.equals("999")){
                     textViewTujuan.setText("Kepada Mahasiswa " + KEPADA + " Fakultas " + NAMAFAKULTAS);
-                } else if (IDMATAKULIAH.equals("0") && IDJURUSAN.equals("0")){
+                } else if (IDMATAKULIAH.equals("0" + IDFAKULTAS) && IDJURUSAN.equals("0" + IDFAKULTAS)){
                     textViewTujuan.setText("Kepada Seluruh Member Fakultas " + NAMAFAKULTAS);
                 }
                 button_next.setVisibility(View.GONE);
@@ -196,9 +196,8 @@ public class PengumumanActivity extends AppCompatActivity {
                         ll_dosen.setVisibility(View.GONE);
                         ll_mahasiswa.setVisibility(View.GONE);
                         button_next.setVisibility(View.VISIBLE);
-                        IDMATAKULIAH = "0";
-                        IDJURUSAN = "0";
-                        getMatakuliahgetJurusan();
+                        IDMATAKULIAH = "0" + IDFAKULTAS;
+                        IDJURUSAN = "0" + IDFAKULTAS;
                         break;
                 }
             }
@@ -208,17 +207,6 @@ public class PengumumanActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void getMatakuliahgetJurusan() {
-        ServerUnpas serverUnpas = new ServerUnpas(PengumumanActivity.this, "getMatakuliahgetJurusan");
-        synchronized (PengumumanActivity.this){
-            serverUnpas.sendDuaString(nomor_induk, IDFAKULTAS);
-        }
-    }
-
-    public void resultgetMatakuliahgetJurusan(JSONArray jsonArrayMJ) {
-
     }
 
     private void getIdFakultas() {
@@ -281,7 +269,7 @@ public class PengumumanActivity extends AppCompatActivity {
                         break;
                     case "Semua Dosen":
                         button_next.setVisibility(View.VISIBLE);
-                        IDMATAKULIAH = "0";
+                        IDMATAKULIAH = "0" + IDFAKULTAS;
                         IDJURUSAN = "999";
                         break;
                     default:
@@ -331,7 +319,7 @@ public class PengumumanActivity extends AppCompatActivity {
                     case "Semua Jurusan":
                         button_next.setVisibility(View.VISIBLE);
                         IDMATAKULIAH = "999";
-                        IDJURUSAN = "0";
+                        IDJURUSAN = "0" + IDFAKULTAS;
                         break;
                         default:
                             button_next.setVisibility(View.VISIBLE);
@@ -346,6 +334,11 @@ public class PengumumanActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void resultgetMatakuliahgetJurusan(JSONArray jsonArrayMJServer) {
+        jsonArrayMJ = jsonArrayMJServer;
+
     }
 
     private String getIdMatakuliah(int position) {

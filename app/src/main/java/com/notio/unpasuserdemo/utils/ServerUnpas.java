@@ -62,8 +62,6 @@ public class ServerUnpas {
             case "getJurusan":
                 Url = ServerSide.POST_GET_JURUSAN_PENGUMUMAN;
                 break;
-            case "getMatakuliahgetJurusan":
-                Url = ServerSide.POST_GET_MATAKULIAH_JURUSAN;
         }
         return Url;
     }
@@ -499,11 +497,6 @@ public class ServerUnpas {
                                         PengumumanActivity pengumumanActivityJurusan = (PengumumanActivity) context;
                                         JSONArray jsonArrayJurusan = jsonObject.getJSONArray("message");
                                         pengumumanActivityJurusan.resultGetJurusan(jsonArrayJurusan);
-                                        break;
-                                    case "getMatakuliahgetJurusan":
-                                        PengumumanActivity pengumumanActivityMJ = (PengumumanActivity) context;
-                                        JSONArray jsonArrayMJ = jsonObject.getJSONArray("message");
-                                        pengumumanActivityMJ.resultgetMatakuliahgetJurusan(jsonArrayMJ);
                                         break;
                                 }
                             }
