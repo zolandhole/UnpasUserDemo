@@ -43,6 +43,7 @@ public class PengumumanActivity extends AppCompatActivity {
     private String IDJURUSAN;
     private String KEPADA;
     private String NAMAFAKULTAS;
+    private String TYPEUSER;
     private static final String TAG = "PengumumanActivity";
     private JSONArray jsonArrayMatakuliah, jsonArrayJurusan;
     private RelativeLayout relativeLayoutTujuan, relativeLayoutPesan;
@@ -102,17 +103,24 @@ public class PengumumanActivity extends AppCompatActivity {
             public void onClick(View v) {
                 relativeLayoutTujuan.setVisibility(View.GONE);
                 relativeLayoutPesan.setVisibility(View.VISIBLE);
-                if (!IDMATAKULIAH.equals("999") && IDJURUSAN.equals("999")){
-                    if (IDMATAKULIAH.equals("0" + IDFAKULTAS)){
-                        textViewTujuan.setText("Kepada " + KEPADA + " pengampu matakuliah di Fakultas " + NAMAFAKULTAS);
-                    } else {
-                        textViewTujuan.setText("Kepada Dosen " + KEPADA);
+
+                if (TYPEUSER.equals("8")){
+                    if (!IDMATAKULIAH.equals("999") && IDJURUSAN.equals("999")){
+                        if (IDMATAKULIAH.equals("0" + IDFAKULTAS)){
+                            textViewTujuan.setText("Kepada " + KEPADA + " pengampu matakuliah di Fakultas " + NAMAFAKULTAS);
+                        } else {
+                            textViewTujuan.setText("Kepada Dosen " + KEPADA);
+                        }
+                    } else if (IDMATAKULIAH.equals("999") && !IDJURUSAN.equals("999")){
+                        textViewTujuan.setText("Kepada Mahasiswa " + KEPADA + " Fakultas " + NAMAFAKULTAS);
+                    } else if (IDMATAKULIAH.equals("0" + IDFAKULTAS) && IDJURUSAN.equals("0" + IDFAKULTAS)){
+                        textViewTujuan.setText("Kepada Seluruh Member Fakultas " + NAMAFAKULTAS);
                     }
-                } else if (IDMATAKULIAH.equals("999") && !IDJURUSAN.equals("999")){
-                    textViewTujuan.setText("Kepada Mahasiswa " + KEPADA + " Fakultas " + NAMAFAKULTAS);
-                } else if (IDMATAKULIAH.equals("0" + IDFAKULTAS) && IDJURUSAN.equals("0" + IDFAKULTAS)){
-                    textViewTujuan.setText("Kepada Seluruh Member Fakultas " + NAMAFAKULTAS);
+                } else {
+                    textViewTujuan.setText("Kepada Mahasiswa " + KEPADA);
                 }
+
+
                 button_next.setVisibility(View.GONE);
                 button_back.setText("Ubah Tujuan");
                 edittextPes.requestFocus();
@@ -123,6 +131,7 @@ public class PengumumanActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String PESAN = edittextPes.getText().toString();
                 sendMessageToServer(nomor_induk,IDMATAKULIAH,IDJURUSAN,PESAN);
+                Log.e(TAG, "onClick: " + IDJURUSAN);
             }
         });
     }
@@ -156,7 +165,7 @@ public class PengumumanActivity extends AppCompatActivity {
     }
 
     private void initRunning() {
-        String TYPEUSER = nomor_induk.substring(0,1);
+        TYPEUSER = nomor_induk.substring(0,1);
         relativeLayoutPesan.setVisibility(View.GONE);
         relativeLayoutTujuan.setVisibility(View.VISIBLE);
         if (TYPEUSER.equals("8")){
@@ -169,8 +178,10 @@ public class PengumumanActivity extends AppCompatActivity {
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, list);
             asc_tujuan.setAdapter(dataAdapter);
         } else if (TYPEUSER.equals("9")){
+            ll_tujuan.setVisibility(View.GONE);
+            ll_dosen.setVisibility(View.GONE);
+            Log.e(TAG, "initRunning: User TYpe :" + TYPEUSER);
             getIdFakultas();
-            getJurusan();
         }
         asc_tujuan.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -212,6 +223,7 @@ public class PengumumanActivity extends AppCompatActivity {
     }
 
     private void getIdFakultas() {
+        Log.e(TAG, "getIdFakultas: " + nomor_induk);
         ServerUnpas serverUnpas = new ServerUnpas(PengumumanActivity.this, "getIdFakultas");
         synchronized (PengumumanActivity.this){
             serverUnpas.sendSingleString(nomor_induk);
@@ -219,6 +231,7 @@ public class PengumumanActivity extends AppCompatActivity {
     }
 
     private void getJurusan() {
+        Log.e(TAG, "getJurusan: Dosen Mengambil id Jurusan" + nomor_induk + IDFAKULTAS);
         progressBar.setVisibility(View.VISIBLE);
         ServerUnpas serverUnpas = new ServerUnpas(PengumumanActivity.this, "getJurusan");
         synchronized (PengumumanActivity.this){
@@ -230,6 +243,9 @@ public class PengumumanActivity extends AppCompatActivity {
         IDFAKULTAS = idfakultas;
         NAMAFAKULTAS = namafakultas;
         Log.e(TAG, "resultGetIdFakultas: " + IDFAKULTAS + namafakultas);
+        if (TYPEUSER.equals("9")){
+            getJurusan();
+        }
     }
 
     private void getMatakuliah() {
@@ -321,7 +337,11 @@ public class PengumumanActivity extends AppCompatActivity {
                     case "Semua Jurusan":
                         button_next.setVisibility(View.VISIBLE);
                         IDMATAKULIAH = "999";
-                        IDJURUSAN = "0" + IDFAKULTAS;
+                        if (TYPEUSER.equals("9")){
+                            IDJURUSAN = "0";
+                        } else {
+                            IDJURUSAN = "0" + IDFAKULTAS;
+                        }
                         break;
                         default:
                             button_next.setVisibility(View.VISIBLE);

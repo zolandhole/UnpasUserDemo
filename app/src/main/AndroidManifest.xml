@@ -47,6 +47,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:launchMode="singleTop"
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize">
             <intent-filter>

@@ -411,6 +411,7 @@ public class ServerUnpas {
     }
 
     public void sendSingleString(final String nomor_induk) {
+        Log.e(TAG, "sendSingleString: "+ nomor_induk);
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 UrlAddress(),
                 new Response.Listener<String>() {
@@ -420,7 +421,7 @@ public class ServerUnpas {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.optString("error").equals("true")){
                                 String message = jsonObject.getString("message");
-                                Log.e(TAG, "onResponse: " + message);
+                                Log.e(TAG, "onResponse: Error True :" + message);
                             } else {
                                 switch (aktifitas){
                                     case "getIdFakultas":
@@ -432,6 +433,7 @@ public class ServerUnpas {
                                             IDFAKULTAS = dataServer.getString("id");
                                             NAMAFAKULTAS = dataServer.getString("nama_fakultas");
                                         }
+                                        Log.e(TAG, "onResponse: success" + IDFAKULTAS + NAMAFAKULTAS);
                                         pengumumanActivity.resultGetIdFakultas(IDFAKULTAS,NAMAFAKULTAS);
                                         break;
                                     case "getPengumuman":
@@ -454,7 +456,7 @@ public class ServerUnpas {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Log.e(TAG, "onResponse: EXCEPTION="+e);
+                            Log.e(TAG, "onResponse: EXCEPTION SINGLE STRING="+e);
                         }
                     }
                 },
@@ -503,7 +505,7 @@ public class ServerUnpas {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Log.e(TAG, "onResponse: EXCEPTION="+e);
+                            Log.e(TAG, "onResponse: EXCEPTION DUA STRING="+e);
                         }
                     }
                 },
@@ -556,7 +558,7 @@ public class ServerUnpas {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Log.e(TAG, "onResponse: EXCEPTION="+e);
+                            Log.e(TAG, "onResponse: EXCEPTION ENAM STRING="+e);
                         }
                     }
                 },
