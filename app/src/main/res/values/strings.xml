@@ -60,14 +60,6 @@
     <string name="kirim">Kirim</string>
     <string name="pengirim">Pengirim</string>
     <string name="pesan">pesan</string>
-    <string name="notif">Persiapan mengajar </string>
-    <string name="notif2"> akan dimulai 30 menit lagi</string>
-    <string name="notif3">Harap mempersiapkan diri,  kuliah </string>
-    <string name="notif4"> akan dimulai 30 menit lagi, Absensi bisa dilakukan 15 menit sebelum matakuliah dimulai dan toleransi 15 menit setelah matakuliah dimulai, jangan sampai terlambat, selamat Mengajar</string>
-    <string name="notif5">Persiapan belajar </string>
-    <string name="notif6"> akan dimulai 30 menit lagi</string>
-    <string name="notif7">Harap memperispkan diri, kuliah </string>
-    <string name="notif8"> akan dimulai 30 menit lagi, Absensi bisa dilakukan 15 menit sebelum matakuliah dimulai dan toleransi keterlambatan 15 menit setelah matakuliah dimulai, jangan sampat terlambat, selamat Belajar</string>
     <string-array name="tujuan_arrays">
         <item>Dosen</item>
         <item>Mahasiswa</item>
