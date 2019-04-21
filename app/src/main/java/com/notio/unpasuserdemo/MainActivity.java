@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkUpdateVersion();
         toolbarBusinness();
         initView();
         initListener();
@@ -86,6 +87,50 @@ public class MainActivity extends AppCompatActivity{
 
         onClick();
         initRunning();
+    }
+
+    private void checkUpdateVersion() {
+        //besok lanjut sini dengan database kita manual
+    }
+
+    private void onUpdateCheckListener(final String urlApp) {
+        Log.e(TAG, "onUpdateCheckListener: ");
+        final Dialog uuidDialog = new Dialog(this);
+        uuidDialog.setContentView(R.layout.wrong_uuid_layout);
+        uuidDialog.setCanceledOnTouchOutside(false);
+        uuidDialog.setCancelable(false);
+        TextView textViewNamaUUID = uuidDialog.findViewById(R.id.uuid_nama_server);
+        textViewNamaUUID.setVisibility(View.GONE);
+
+        TextView textViewPeringatan = uuidDialog.findViewById(R.id.peringatan);
+        TextView textViewPeringatan2 = uuidDialog.findViewById(R.id.peringatan2);
+
+        textViewPeringatan.setText(R.string.updateApp);
+        textViewPeringatan.setVisibility(View.VISIBLE);
+        textViewPeringatan2.setVisibility(View.GONE);
+
+        TextView button_login_text = uuidDialog.findViewById(R.id.button_login_text);
+        TextView button_keluar_text = uuidDialog.findViewById(R.id.button_keluar_text);
+        button_login_text.setText(R.string.update);
+        button_keluar_text.setText(R.string.keluar);
+
+        CardView buttonKeluar = uuidDialog.findViewById(R.id.uuid_button_keluar);
+        CardView buttonLogin = uuidDialog.findViewById(R.id.uuid_button_login);
+        buttonKeluar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uuidDialog.dismiss();
+                finish();
+            }
+        });
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uuidDialog.dismiss();
+                Toast.makeText(MainActivity.this, "Update aplikasi " + urlApp , Toast.LENGTH_SHORT).show();
+            }
+        });
+        uuidDialog.show();
     }
 
     @Override

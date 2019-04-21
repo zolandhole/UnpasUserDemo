@@ -60,6 +60,7 @@
     <string name="kirim">Kirim</string>
     <string name="pengirim">Pengirim</string>
     <string name="pesan">pesan</string>
+    <string name="updateApp">Untuk melanjutkan silahkan update ke versi terbaru!</string>
     <string-array name="tujuan_arrays">
         <item>Dosen</item>
         <item>Mahasiswa</item>
