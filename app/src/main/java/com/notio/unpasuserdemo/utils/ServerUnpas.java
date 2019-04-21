@@ -232,11 +232,9 @@ public class ServerUnpas {
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.e(TAG, "onResponse: exception"+ e);
-                            switch (aktifitas){
-                                case "Login":
-                                    LoginActivity loginActivity = (LoginActivity) context;
-                                    loginActivity.showDialogNoInternet();
-                                    break;
+                            if ("Login".equals(aktifitas)) {
+                                LoginActivity loginActivity = (LoginActivity) context;
+                                loginActivity.showDialogNoInternet();
                             }
                         }
                     }
@@ -245,11 +243,9 @@ public class ServerUnpas {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(TAG, "onErrorResponse: "+ error);
-                        switch (aktifitas){
-                            case "Login":
-                                LoginActivity loginActivity = (LoginActivity) context;
-                                loginActivity.showDialogNoInternet();
-                                break;
+                        if ("Login".equals(aktifitas)) {
+                            LoginActivity loginActivity = (LoginActivity) context;
+                            loginActivity.showDialogNoInternet();
                         }
                     }
                 }){
@@ -537,22 +533,18 @@ public class ServerUnpas {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.optString("error").equals("true")){
-                                switch (aktifitas){
-                                    case "sendMessageToServer":
-                                        PengumumanActivity pengumumanActivity = (PengumumanActivity) context;
-                                        String message = jsonObject.getString("message");
-                                        pengumumanActivity.resultSendMessageToServer(message);
-                                        break;
+                                if ("sendMessageToServer".equals(aktifitas)) {
+                                    PengumumanActivity pengumumanActivity = (PengumumanActivity) context;
+                                    String message = jsonObject.getString("message");
+                                    pengumumanActivity.resultSendMessageToServer(message);
                                 }
                                 String message = jsonObject.getString("message");
                                 Log.e(TAG, "onResponse: " + message);
                             } else {
-                                switch (aktifitas){
-                                    case "sendMessageToServer":
-                                        PengumumanActivity pengumumanActivity = (PengumumanActivity) context;
-                                        String message = jsonObject.getString("message");
-                                        pengumumanActivity.resultSendMessageToServer(message);
-                                        break;
+                                if ("sendMessageToServer".equals(aktifitas)) {
+                                    PengumumanActivity pengumumanActivity = (PengumumanActivity) context;
+                                    String message = jsonObject.getString("message");
+                                    pengumumanActivity.resultSendMessageToServer(message);
                                 }
                             }
 
