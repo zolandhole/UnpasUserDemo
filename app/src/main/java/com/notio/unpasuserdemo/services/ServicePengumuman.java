@@ -3,6 +3,8 @@ package com.notio.unpasuserdemo.services;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.notio.unpasuserdemo.MainActivity;
@@ -30,6 +32,12 @@ public class ServicePengumuman extends FirebaseMessagingService {
         }
     }
 
+    private void updateRecyclerViewMain() {
+        Intent intent = new Intent();
+        intent.setAction("YADIRUDIYANSAH");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
     private void sendPushNotification(JSONObject jsonObject) {
         Log.e(TAG, "sendPushNotification: " + jsonObject.toString());
         try {
@@ -41,6 +49,7 @@ public class ServicePengumuman extends FirebaseMessagingService {
             MyNotificationManager myNotificationManager = new MyNotificationManager(getApplicationContext());
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
+            updateRecyclerViewMain();
             if (imageUrl.equals("null")){
                 myNotificationManager.showSmallNotification(title, message, intent);
             } else {

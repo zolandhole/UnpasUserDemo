@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 
 import com.notio.unpasuserdemo.MainActivity;
@@ -69,8 +67,6 @@ class MyNotificationManager {
             bigPictureStyle.setBigContentTitle(title);
             bigPictureStyle.setSummaryText(HtmlCompat.fromHtml(message,HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
             bigPictureStyle.bigPicture(getBitmapFromUrl(url));
-
-            Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             Notification notification;
             notification = builder
@@ -78,11 +74,10 @@ class MyNotificationManager {
                     .setTicker(title).setWhen(0)
                     .setContentIntent(pendingIntent)
                     .setContentTitle(title)
-                    .setStyle(bigPictureStyle)
-                    .setSound(defaultSound)
+                    .setDefaults(Notification.DEFAULT_ALL)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.ic_unpas_notif))
                     .setContentText(message)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
                     .build();
             NotificationManager notificationManager =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -129,11 +124,11 @@ class MyNotificationManager {
             PendingIntent pendingIntent;
 
             pendingIntent = PendingIntent.getActivity(context,555, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-            Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             Notification notification;
             notification = builder
-                    .setSound(defaultSound)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setSmallIcon(R.drawable.ic_unpas_notif)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)

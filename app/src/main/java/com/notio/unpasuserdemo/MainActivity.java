@@ -3,6 +3,7 @@ package com.notio.unpasuserdemo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,7 +86,6 @@ public class MainActivity extends AppCompatActivity{
 
         onClick();
         initRunning();
-
     }
 
     @Override
@@ -94,7 +94,21 @@ public class MainActivity extends AppCompatActivity{
         Intent intent = new Intent(MainActivity.this, FeedService.class);
         startActivity(intent);
         getPengumuman();
+        updatePengumuman();
     }
+
+    private void updatePengumuman() {
+        IntentFilter intentFilter = new IntentFilter("YADIRUDIYANSAH");
+        LocalBroadcastManager.getInstance(this).registerReceiver(onNotice, intentFilter);
+    }
+
+    private BroadcastReceiver onNotice = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getPengumuman();
+            Log.e(TAG, "onReceive: NOTIFIKASI");
+        }
+    };
 
     private void getPengumuman() {
         ServerUnpas serverUnpas = new ServerUnpas(MainActivity.this, "getPengumuman");

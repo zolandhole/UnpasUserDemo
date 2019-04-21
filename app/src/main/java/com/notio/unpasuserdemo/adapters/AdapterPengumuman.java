@@ -6,10 +6,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.notio.unpasuserdemo.R;
 import com.notio.unpasuserdemo.models.ModelPengumuman;
+import com.notio.unpasuserdemo.utils.DiffUtilCallBack;
 
 import java.util.List;
 
