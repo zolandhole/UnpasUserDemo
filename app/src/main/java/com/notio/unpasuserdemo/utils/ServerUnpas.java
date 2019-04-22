@@ -62,6 +62,9 @@ public class ServerUnpas {
             case "getJurusan":
                 Url = ServerSide.POST_GET_JURUSAN_PENGUMUMAN;
                 break;
+            case "CheckUpdateVersion":
+                Url = ServerSide.GET_UPDATE_VERSION;
+                break;
         }
         return Url;
     }
@@ -572,6 +575,43 @@ public class ServerUnpas {
                 return params;
             }
         };
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+
+    public void getVersion() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                UrlAddress(),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.optString("error").equals("true")){
+                                Log.e(TAG, "onResponse: getVersion: " + jsonObject.getString("message"));
+                            } else {
+                                MainActivity mainActivity = (MainActivity) context;
+                                JSONArray jsonArray = jsonObject.getJSONArray("message");
+                                String is_update = "", version_update = "", url_update = "";
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject dataServer = jsonArray.getJSONObject(i);
+                                    is_update =  dataServer.getString("is_update");
+                                    version_update = dataServer.getString("version");
+                                    url_update = dataServer.getString("url");
+                                }
+                                mainActivity.resultGetVersion(is_update,version_update,url_update);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "onErrorResponse: getVersion: " + error);
+                    }
+                });
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(stringRequest);
     }

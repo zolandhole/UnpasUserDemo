@@ -14,6 +14,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -90,47 +91,10 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void checkUpdateVersion() {
-        //besok lanjut sini dengan database kita manual
-    }
-
-    private void onUpdateCheckListener(final String urlApp) {
-        Log.e(TAG, "onUpdateCheckListener: ");
-        final Dialog uuidDialog = new Dialog(this);
-        uuidDialog.setContentView(R.layout.wrong_uuid_layout);
-        uuidDialog.setCanceledOnTouchOutside(false);
-        uuidDialog.setCancelable(false);
-        TextView textViewNamaUUID = uuidDialog.findViewById(R.id.uuid_nama_server);
-        textViewNamaUUID.setVisibility(View.GONE);
-
-        TextView textViewPeringatan = uuidDialog.findViewById(R.id.peringatan);
-        TextView textViewPeringatan2 = uuidDialog.findViewById(R.id.peringatan2);
-
-        textViewPeringatan.setText(R.string.updateApp);
-        textViewPeringatan.setVisibility(View.VISIBLE);
-        textViewPeringatan2.setVisibility(View.GONE);
-
-        TextView button_login_text = uuidDialog.findViewById(R.id.button_login_text);
-        TextView button_keluar_text = uuidDialog.findViewById(R.id.button_keluar_text);
-        button_login_text.setText(R.string.update);
-        button_keluar_text.setText(R.string.keluar);
-
-        CardView buttonKeluar = uuidDialog.findViewById(R.id.uuid_button_keluar);
-        CardView buttonLogin = uuidDialog.findViewById(R.id.uuid_button_login);
-        buttonKeluar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uuidDialog.dismiss();
-                finish();
-            }
-        });
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uuidDialog.dismiss();
-                Toast.makeText(MainActivity.this, "Update aplikasi " + urlApp , Toast.LENGTH_SHORT).show();
-            }
-        });
-        uuidDialog.show();
+        ServerUnpas serverUnpas = new ServerUnpas(MainActivity.this, "CheckUpdateVersion");
+        synchronized (MainActivity.this){
+            serverUnpas.getVersion();
+        }
     }
 
     @Override
@@ -578,5 +542,51 @@ public class MainActivity extends AppCompatActivity{
             matikanBluetooth = "tidak";
             sendUserToQRActivity();
         }
+    }
+
+    public void resultGetVersion(String is_update, String version_update, String url_update) {
+        if (is_update.equals("1")){
+            onUpdateCheckListener(version_update, url_update);
+        }
+    }
+
+    private void onUpdateCheckListener(String version_update, final String url_update) {
+        final Dialog uuidDialog = new Dialog(this);
+        uuidDialog.setContentView(R.layout.wrong_uuid_layout);
+        uuidDialog.setCanceledOnTouchOutside(false);
+        uuidDialog.setCancelable(false);
+        TextView textViewNamaUUID = uuidDialog.findViewById(R.id.uuid_nama_server);
+        textViewNamaUUID.setText(version_update);
+        textViewNamaUUID.setVisibility(View.VISIBLE);
+
+        TextView textViewPeringatan = uuidDialog.findViewById(R.id.peringatan);
+        TextView textViewPeringatan2 = uuidDialog.findViewById(R.id.peringatan2);
+
+        textViewPeringatan.setText(R.string.updateApp);
+        textViewPeringatan.setVisibility(View.VISIBLE);
+        textViewPeringatan2.setVisibility(View.GONE);
+
+        TextView button_login_text = uuidDialog.findViewById(R.id.button_login_text);
+        TextView button_keluar_text = uuidDialog.findViewById(R.id.button_keluar_text);
+        button_login_text.setText(R.string.update);
+        button_keluar_text.setText(R.string.keluar);
+
+        CardView buttonKeluar = uuidDialog.findViewById(R.id.uuid_button_keluar);
+        CardView buttonLogin = uuidDialog.findViewById(R.id.uuid_button_login);
+        buttonKeluar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uuidDialog.dismiss();
+                finish();
+            }
+        });
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uuidDialog.dismiss();
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url_update)));
+            }
+        });
+        uuidDialog.show();
     }
 }
