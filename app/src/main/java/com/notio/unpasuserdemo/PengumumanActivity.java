@@ -131,7 +131,7 @@ public class PengumumanActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String PESAN = edittextPes.getText().toString();
                 sendMessageToServer(nomor_induk,IDMATAKULIAH,IDJURUSAN,PESAN);
-                Log.e(TAG, "onClick: " + IDJURUSAN);
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -380,8 +380,13 @@ public class PengumumanActivity extends AppCompatActivity {
         return IDJURUSAN;
     }
 
-    public void resultSendMessageToServer(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        finish();
+    public void resultSendMessageToServer(String message, String error) {
+        progressBar.setVisibility(View.GONE);
+        if (error.equals("true")){
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 }

@@ -16,9 +16,11 @@ import java.util.List;
 public class AdapterPengumuman extends RecyclerView.Adapter<AdapterPengumuman.HolderData> {
 
     private List<ModelPengumuman> listPengumuman;
+    private String nama;
 
-    public AdapterPengumuman(List<ModelPengumuman> listPengumuman){
+    public AdapterPengumuman(List<ModelPengumuman> listPengumuman, String nama){
         this.listPengumuman = listPengumuman;
+        this.nama = nama;
     }
 
     @NonNull
@@ -31,7 +33,11 @@ public class AdapterPengumuman extends RecyclerView.Adapter<AdapterPengumuman.Ho
     @Override
     public void onBindViewHolder(@NonNull AdapterPengumuman.HolderData holder, int position) {
         ModelPengumuman modelPengumuman = listPengumuman.get(position);
-        holder.main_title.setText(modelPengumuman.getTITLE());
+        if (!nama.equals(modelPengumuman.getTITLE())){
+            holder.main_title.setText(modelPengumuman.getTITLE());
+        } else {
+            holder.main_title.setText(R.string.anda);
+        }
         holder.main_pesan.setText(modelPengumuman.getPESAN());
         holder.main_jam.setText(modelPengumuman.getUPLOAD_DATE());
     }

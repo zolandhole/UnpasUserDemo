@@ -538,16 +538,18 @@ public class ServerUnpas {
                             if (jsonObject.optString("error").equals("true")){
                                 if ("sendMessageToServer".equals(aktifitas)) {
                                     PengumumanActivity pengumumanActivity = (PengumumanActivity) context;
+                                    String error = jsonObject.getString("error");
                                     String message = jsonObject.getString("message");
-                                    pengumumanActivity.resultSendMessageToServer(message);
+                                    pengumumanActivity.resultSendMessageToServer(message, error);
                                 }
                                 String message = jsonObject.getString("message");
                                 Log.e(TAG, "onResponse: " + message);
                             } else {
                                 if ("sendMessageToServer".equals(aktifitas)) {
                                     PengumumanActivity pengumumanActivity = (PengumumanActivity) context;
+                                    String error = jsonObject.getString("error");
                                     String message = jsonObject.getString("message");
-                                    pengumumanActivity.resultSendMessageToServer(message);
+                                    pengumumanActivity.resultSendMessageToServer(message, error);
                                 }
                             }
 

@@ -48,23 +48,13 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity{
 
     private String TAG = "MainActivity";
-    private TextView textViewNama;
-    private TextView textViewJurusan;
+    private TextView textViewNama, textViewJurusan;
     private CardView cardViewForum, cardViewAbsen, cardViewJadwal, cardViewLapAbsen;
     private LinearLayout linearLayoutMenu;
     private RelativeLayout main_rl_tambah;
     private ProgressDialog progressDialog;
     private DBHandler dbHandler;
-    private String idUser;
-    private String nomor_induk;
-    private String nama;
-    private String nama_jurusan;
-    private String mac_user;
-    private String password;
-    private String uuid;
-    private String serverUUID;
-    private String matikanBluetooth;
-    private String token;
+    private String idUser, nomor_induk, nama, nama_jurusan, mac_user, password, uuid, serverUUID, matikanBluetooth, token;
     private BluetoothAdapter bluetoothAdapter;
     private RecyclerView recyclerViewPengumuman;
 
@@ -135,8 +125,9 @@ public class MainActivity extends AppCompatActivity{
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerViewPengumuman.setLayoutManager(manager);
         recyclerViewPengumuman.setHasFixedSize(true);
-        RecyclerView.Adapter adapterPengumuman = new AdapterPengumuman(listPengumuman);
+        RecyclerView.Adapter adapterPengumuman = new AdapterPengumuman(listPengumuman, nama);
         recyclerViewPengumuman.setAdapter(adapterPengumuman);
+        recyclerViewPengumuman.setNestedScrollingEnabled(false);
     }
 
     @Override
