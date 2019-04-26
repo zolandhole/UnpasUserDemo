@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 public class ServicePengumuman extends FirebaseMessagingService {
     private static final String TAG = "ServicePengumuman";
+
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);

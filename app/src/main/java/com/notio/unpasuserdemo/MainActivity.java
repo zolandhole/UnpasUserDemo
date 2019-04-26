@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkUpdateVersion();
         toolbarBusinness();
         initView();
         initListener();
@@ -90,6 +89,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onStart() {
         super.onStart();
+        checkUpdateVersion();
         Intent intent = new Intent(MainActivity.this, FeedService.class);
         startActivity(intent);
         getPengumuman();
@@ -536,8 +536,13 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void resultGetVersion(String is_update, String version_update, String url_update) {
+        int versionCode = BuildConfig.VERSION_CODE;
+        String versionName = BuildConfig.VERSION_NAME;
+        Log.e(TAG, "resultGetVersion: " + versionCode + " " + versionName + " " + version_update);
         if (is_update.equals("1")){
-            onUpdateCheckListener(version_update, url_update);
+            if (!versionName.equals(version_update)){
+                onUpdateCheckListener(version_update, url_update);
+            }
         }
     }
 
