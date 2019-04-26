@@ -19,7 +19,7 @@ import java.util.Objects;
 
 public class InputMacActivity extends AppCompatActivity {
 
-//    private String TAG = "InputMacActivity";
+//    private String TAG = "InputMacActivity"; yarud
     private MacAddressEditText mac_input;
     private Button mac_button;
     private String id_user, nomor_induk, password;
