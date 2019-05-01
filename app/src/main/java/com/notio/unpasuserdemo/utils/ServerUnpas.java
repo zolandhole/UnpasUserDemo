@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -47,24 +49,13 @@ public class ServerUnpas {
     private String UrlAddress(){
         String Url="";
         switch (aktifitas){
-            case "getIdFakultas":
-                Url = ServerSide.POST_GET_IDFAKULTAS;
-                break;
-            case "getMatakuliah":
-                Url = ServerSide.POST_GET_MATAKULIAH;
-                break;
-            case "sendMessageToServer":
-                Url = ServerSide.POST_PESAN_PENGUMUMAN;
-                break;
-            case "getPengumuman":
-                Url = ServerSide.POST_GET_PENGUMUMAN;
-                break;
-            case "getJurusan":
-                Url = ServerSide.POST_GET_JURUSAN_PENGUMUMAN;
-                break;
-            case "CheckUpdateVersion":
-                Url = ServerSide.GET_UPDATE_VERSION;
-                break;
+            case "getIdFakultas": Url = ServerSide.POST_GET_IDFAKULTAS; break;
+            case "getMatakuliah": Url = ServerSide.POST_GET_MATAKULIAH; break;
+            case "sendMessageToServer": Url = ServerSide.POST_PESAN_PENGUMUMAN; break;
+            case "getPengumuman": Url = ServerSide.POST_GET_PENGUMUMAN; break;
+            case "getJurusan": Url = ServerSide.POST_GET_JURUSAN_PENGUMUMAN; break;
+            case "CheckUpdateVersion": Url = ServerSide.GET_UPDATE_VERSION;break;
+            case "uploadProfile": Url = ServerSide.POST_UPLOADIMAGE;
         }
         return Url;
     }
@@ -616,5 +607,47 @@ public class ServerUnpas {
                 });
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(stringRequest);
+    }
+
+    public void sendImage(final byte[] fileData, final String nomorinduk) {
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, UrlAddress(),
+                new Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(new String(response.data));
+                            Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "" + error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "onErrorResponse: " + error);
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<>();
+                params.put("nomor_induk", nomorinduk);
+                return params;
+            }
+
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                long imagename = System.currentTimeMillis();
+                params.put("photo", new DataPart(imagename + ".jpg", fileData));
+                return params;
+            }
+        };
+        volleyMultipartRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(volleyMultipartRequest);
     }
 }

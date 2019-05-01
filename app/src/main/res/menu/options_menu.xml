@@ -2,8 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:title="Profile"
+        android:id="@+id/main_profile"
+        app:showAsAction="never" />
+    <item
         android:title="@string/keluar"
         android:id="@+id/main_logout"
-        android:icon="@drawable/ic_exit_to_app_black_24dp"
         app:showAsAction="never" />
 </menu>

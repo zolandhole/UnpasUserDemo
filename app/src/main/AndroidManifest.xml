@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".services.App"
@@ -20,21 +23,24 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="n">
 
-        <receiver android:enabled="true" android:name=".services.NotificationReceiver" />
+        <receiver
+            android:name=".services.NotificationReceiver"
+            android:enabled="true" />
         <receiver android:name=".services.AutoStart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
+        <activity android:name=".ProfileActivity" />
         <activity android:name=".services.FeedService" />
         <activity
             android:name=".LapAbsensi"
             android:configChanges="orientation|screenSize" />
         <activity android:name=".JadwalMahasiswaActivity" />
         <activity
-            android:configChanges="orientation|screenSize"
             android:name=".PengumumanActivity"
+            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".QRActivity"
@@ -47,9 +53,9 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:launchMode="singleTop"
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,12 +64,12 @@
         </activity>
 
         <service
-            android:enabled="true"
-            android:name=".services.TriggerService" />
+            android:name=".services.TriggerService"
+            android:enabled="true" />
         <service
-            android:stopWithTask="false"
-            android:enabled="true"
             android:name=".services.ServicePengumuman"
+            android:enabled="true"
+            android:stopWithTask="false"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

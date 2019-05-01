@@ -157,8 +157,13 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.main_logout){
-            sendUserToLoginActivity();
+        switch (item.getItemId()){
+            case R.id.main_profile:
+                sendUserToProfileActivity();
+                break;
+            case R.id.main_logout:
+                sendUserToLoginActivity();
+                break;
         }
         return true;
     }
@@ -374,6 +379,12 @@ public class MainActivity extends AppCompatActivity{
         intentLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intentLogin);
         finish();
+    }
+
+    private void sendUserToProfileActivity() {
+        Intent intentProfile = new Intent(MainActivity.this, ProfileActivity.class);
+        intentProfile.putExtra("NOMOR_INDUK", nomor_induk);
+        startActivity(intentProfile);
     }
 
     private void sendUserToInputMacActivity() {

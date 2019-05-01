@@ -62,6 +62,7 @@
     <string name="pesan">pesan</string>
     <string name="updateApp">Untuk melanjutkan silahkan update ke versi terbaru!</string>
     <string name="anda">Anda</string>
+    <string name="klik_photo_untuk_mengganti_photo_profile">Klik photo untuk mengganti Photo Profile</string>
     <string-array name="tujuan_arrays">
         <item>Dosen</item>
         <item>Mahasiswa</item>
