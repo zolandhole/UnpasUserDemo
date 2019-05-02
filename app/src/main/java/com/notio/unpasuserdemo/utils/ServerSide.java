@@ -1,6 +1,7 @@
 package com.notio.unpasuserdemo.utils;
 
-class ServerSide {
+public class ServerSide {
+    public static final String POST_GET_IMAGEPROFILE = "http://122.248.39.157/unpas/profile/get_photo_profile";
     static final String POST_UPLOADIMAGE = "http://122.248.39.157/unpas/profile/upload_profile";
     static final String GET_UPDATE_VERSION = "http://122.248.39.157/unpas/updateversion/get_update_version";
     static final String POST_GET_JURUSAN_PENGUMUMAN = "http://122.248.39.157/unpas/pengumuman/get_jurusan";

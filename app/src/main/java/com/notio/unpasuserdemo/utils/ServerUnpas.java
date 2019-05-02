@@ -17,6 +17,7 @@ import com.notio.unpasuserdemo.JadwalMahasiswaActivity;
 import com.notio.unpasuserdemo.LoginActivity;
 import com.notio.unpasuserdemo.MainActivity;
 import com.notio.unpasuserdemo.PengumumanActivity;
+import com.notio.unpasuserdemo.ProfileActivity;
 import com.notio.unpasuserdemo.models.ModelJadwal;
 import com.notio.unpasuserdemo.models.ModelPengumuman;
 import com.notio.unpasuserdemo.models.ModelUser;
@@ -55,7 +56,8 @@ public class ServerUnpas {
             case "getPengumuman": Url = ServerSide.POST_GET_PENGUMUMAN; break;
             case "getJurusan": Url = ServerSide.POST_GET_JURUSAN_PENGUMUMAN; break;
             case "CheckUpdateVersion": Url = ServerSide.GET_UPDATE_VERSION;break;
-            case "uploadProfile": Url = ServerSide.POST_UPLOADIMAGE;
+            case "uploadProfile": Url = ServerSide.POST_UPLOADIMAGE;break;
+            case "get_image": Url = ServerSide.POST_GET_IMAGEPROFILE;break;
         }
         return Url;
     }
@@ -441,6 +443,12 @@ public class ServerUnpas {
                                         }
                                         mainActivity.resultGetPengumuman(listPengumumans);
                                         break;
+                                    case "get_image":
+                                        MainActivity mainActivity1 = (MainActivity) context;
+                                        String image_url = jsonObject.getString("message");
+                                        Log.e(TAG, "onResponse: "+ image_url);
+                                        MainActivity.resultgetImageProfile(image_url);
+                                        break;
                                 }
                             }
 
@@ -616,7 +624,10 @@ public class ServerUnpas {
                     public void onResponse(NetworkResponse response) {
                         try {
                             JSONObject jsonObject = new JSONObject(new String(response.data));
-                            Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                            String message = jsonObject.getString("message");
+                            Log.e(TAG, "onResponse: "+ message);
+                            ProfileActivity profileActivity = (ProfileActivity) context;
+                            profileActivity.resultsendImage(message);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

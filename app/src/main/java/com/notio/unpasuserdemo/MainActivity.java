@@ -48,6 +48,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity{
 
     private String TAG = "MainActivity";
+    private static String url_profile;
     private TextView textViewNama, textViewJurusan;
     private CardView cardViewForum, cardViewAbsen, cardViewJadwal, cardViewLapAbsen;
     private LinearLayout linearLayoutMenu;
@@ -77,7 +78,19 @@ public class MainActivity extends AppCompatActivity{
 
         onClick();
         initRunning();
+
     }
+
+    private void getImageUrl() {
+        ServerUnpas serverUnpas = new ServerUnpas(this, "get_image");
+        synchronized (this){
+            serverUnpas.sendSingleString(nomor_induk);
+        }
+    }
+    public static void resultgetImageProfile(String image_url) {
+        url_profile = image_url;
+    }
+
 
     private void checkUpdateVersion() {
         ServerUnpas serverUnpas = new ServerUnpas(MainActivity.this, "CheckUpdateVersion");
@@ -114,6 +127,12 @@ public class MainActivity extends AppCompatActivity{
         synchronized (MainActivity.this) {
             serverUnpas.sendSingleString(nomor_induk);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getImageUrl();
     }
 
     @Override
@@ -384,6 +403,7 @@ public class MainActivity extends AppCompatActivity{
     private void sendUserToProfileActivity() {
         Intent intentProfile = new Intent(MainActivity.this, ProfileActivity.class);
         intentProfile.putExtra("NOMOR_INDUK", nomor_induk);
+        intentProfile.putExtra("URL_PROFILE", url_profile);
         startActivity(intentProfile);
     }
 
