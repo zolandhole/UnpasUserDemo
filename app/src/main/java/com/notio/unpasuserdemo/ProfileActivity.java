@@ -15,9 +15,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -35,14 +35,17 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "ProfileActivity";
-    private ImageView imageView;
+    private CircleImageView imageView;
     private static final String IMAGE_DIRECTORY = "/profile";
     private int GALLERY = 1, CAMERA = 2;
     private Bitmap bitmap;
     private String nomorinduk;
+    private AlertDialog ad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +54,20 @@ public class ProfileActivity extends AppCompatActivity {
         requestMultiplePermissions();
         nomorinduk = getIntent().getStringExtra("NOMOR_INDUK");
         imageView = findViewById(R.id.profile_image);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProfileActivity.this, "Perbesar Gambar", Toast.LENGTH_SHORT).show();
+            }
+        });
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPictureDialog();
             }
         });
+
         Log.e(TAG, "onCreate: " + nomorinduk);
     }
 
@@ -97,6 +108,11 @@ public class ProfileActivity extends AppCompatActivity {
                 .check();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
     private void showPictureDialog(){
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
         pictureDialog.setTitle("Pilih Photo");
@@ -115,9 +131,10 @@ public class ProfileActivity extends AppCompatActivity {
                                 takePhotoFromCamera();
                                 break;
                         }
+                        ad.dismiss();
                     }
                 });
-        pictureDialog.show();
+        ad = pictureDialog.show();
     }
 
     public void choosePhotoFromGallary() {
@@ -144,8 +161,8 @@ public class ProfileActivity extends AppCompatActivity {
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
 //                    String path = saveImage(bitmap);
-                    Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-//                    imageView.setImageBitmap(bitmap);
+                    Toast.makeText(ProfileActivity.this, "Image Saved over gallery!", Toast.LENGTH_SHORT).show();
+                    imageView.setImageBitmap(bitmap);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -157,9 +174,9 @@ public class ProfileActivity extends AppCompatActivity {
             assert data != null;
             bitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             saveImage(bitmap);
-            Toast.makeText(ProfileActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+            imageView.setImageBitmap(bitmap);
+            Toast.makeText(ProfileActivity.this, "Image Saved over camera!", Toast.LENGTH_SHORT).show();
         }
-        imageView.setImageBitmap(bitmap);
         uploadImageToServer(bitmap);
     }
 
